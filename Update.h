@@ -14,6 +14,7 @@ public:
 private:
     void updateBaseOnFps();
     double fps;
+    int indexFps;
 };
 
 #endif // UPDATE_H

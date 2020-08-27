@@ -3,6 +3,8 @@
 
 #include <QGraphicsPixmapItem>
 
+#include "Wall.h"
+
 class Projectil: public QGraphicsPixmapItem{
 public:
     Projectil();

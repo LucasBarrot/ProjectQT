@@ -166,7 +166,6 @@ void Generation_World::generate()
 
             scene()->addItem(tabRoomFree.at(indexRoom));
 
-
             int randomTypeRoom = rand() % 4;
 
             bool verifGiftRoom = false;

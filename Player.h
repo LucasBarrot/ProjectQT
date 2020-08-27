@@ -63,7 +63,7 @@ private:
     std::set<int> keysPressed_;
 
     bool colliderVerif(QList<QGraphicsItem *> listCollider);
-    void moveCloseToWall();
+    void moveCloseToWall(int xSign, int ySign, Collider * collider);
 
 
 };

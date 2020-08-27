@@ -3,9 +3,10 @@
 
 #include <QDebug>
 
+
 Game::Game(QWidget * parent){
     //set fps
-    fps = 60;
+    fps = 30;
     //Create scene
     scene = new QGraphicsScene();
 
@@ -75,7 +76,6 @@ void Game::mouseMoveEvent(QMouseEvent *event)
     double angle = -1 * line.angle();
 
     if(90 < asbAngle && asbAngle < 270 && verifRotationCaractere == false){
-
         QImage img(":/Source/Source/Image/Caractere/wizzard_m_idle_anim_f0_resize.png");
         img = img.mirrored(true, false);
         player->setPixmap(QPixmap::fromImage(img));
@@ -103,7 +103,6 @@ void Game::resizeEvent(QResizeEvent *event){
     qDebug() <<"width : " << width() << "height : " << height();
     scene->setSceneRect(scene->itemsBoundingRect().x() - width()/4, scene->itemsBoundingRect().y() - height()/4,scene->itemsBoundingRect().size().rwidth() + width()/2,scene->itemsBoundingRect().size().rheight() + height()/2);
     setSceneRect(scene->sceneRect());
-
 }
 
 void Game::wheelEvent(QWheelEvent *event)
@@ -111,8 +110,7 @@ void Game::wheelEvent(QWheelEvent *event)
 
 }
 
-void Game::mousePressEvent(QMouseEvent *event)
-{
+void Game::mousePressEvent(QMouseEvent *event){
     Projectil * projectil = new Projectil();
     projectil->setPos(player->pos() + player->weapon->pos());
 
