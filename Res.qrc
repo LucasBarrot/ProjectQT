@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/Source">
+        <file>Source/Image/Wall_1.png</file>
+        <file>Source/Image/Ground_1.png</file>
+        <file>Source/Image/Ground_2.png</file>
+        <file>Source/Image/Ground_3.png</file>
+        <file>Source/Image/Ground_4.png</file>
+        <file>Source/Image/Caractere/Link_1.png</file>
+        <file>Source/Image/Caractere/wizzard_m_idle_anim_f0.png</file>
+        <file>Source/Image/Caractere/wizzard_m_idle_anim_f1.png</file>
+        <file>Source/Image/Caractere/wizzard_m_idle_anim_f2.png</file>
+        <file>Source/Image/Caractere/wizzard_m_idle_anim_f3.png</file>
+        <file>Source/Image/Caractere/wizzard_m_idle_anim_f0_resize.png</file>
+        <file>Source/Image/projectil/Projectil_1.png</file>
+        <file>Source/Image/Weapon/weapon_red_magic_staff.png</file>
+    </qresource>
+</RCC>
