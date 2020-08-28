@@ -17,7 +17,10 @@ public:
     void resizeEvent(QResizeEvent *event);
     void wheelEvent(QWheelEvent *event);
     void mousePressEvent(QMouseEvent * event);
+    void mouseReleaseEvent(QMouseEvent * event);
     void mouseDoubleClickEvent(QMouseEvent *event);
+
+    bool get_verifRotationCaracter();
 
     QGraphicsScene * scene;
     Generation_World * world;
@@ -25,12 +28,13 @@ public:
 
     QVector<Projectil*> tabProjectil;
 
-    bool verifRotationCaractere = true;
+    std::set<int> mousePressed_;
 
     double fps;
 
 private:
     double orientationWeapon;
+    bool verifRotationCaractere = true;
 };
 
 #endif // GAME_H

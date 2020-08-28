@@ -6,20 +6,21 @@
 
 extern Game * game;
 
-Projectil::Projectil()
+Projectil::Projectil(double argAngle)
 {
+    angle = argAngle;
     QImage img(":/Source/Source/Image/projectil/Projectil_1.png");
     setPixmap(QPixmap::fromImage(img));
     setTransformOriginPoint(img.width()/2, img.height()/2);
+    setRotation(-180);
 }
 
 void Projectil::moveProjectil()
 {
     int STEP_SIZE = 10;
-    double theta = rotation(); // degrees
 
-    double dy = STEP_SIZE * qSin(qDegreesToRadians(theta));
-    double dx = STEP_SIZE * qCos(qDegreesToRadians(theta));
+    double dy = STEP_SIZE * qSin(qDegreesToRadians(angle));
+    double dx = STEP_SIZE * qCos(qDegreesToRadians(angle));
 
     setPos(x()+dx, y()+dy);
 

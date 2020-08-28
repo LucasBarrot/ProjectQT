@@ -1,6 +1,7 @@
 #include "Update.h"
 
 #include <QGraphicsScene>
+#include <QTimer>
 
 extern Game * game;
 
@@ -10,7 +11,7 @@ Update::Update(double argFps)
     //set connect with a timer base on fps
     QTimer *timer = new QTimer();
     connect(timer,&QTimer::timeout,this,&Update::updateBaseOnFps);
-    timer->start(1000/fps);
+    timer->start( 1000/fps);
     indexFps = 0;
 }
 
@@ -20,10 +21,15 @@ void Update::updateBaseOnFps()
         game->player->moving();
     }
 
-
     for(int indexProjectil = 0; indexProjectil < game->tabProjectil.size(); indexProjectil++){
         game->tabProjectil.at(indexProjectil)->moveProjectil();
     }
+
+    if(indexFps%20 == 0){
+        game->player->updateSprite();
+    }
+
+
 
     indexFps++;
 
@@ -31,5 +37,6 @@ void Update::updateBaseOnFps()
         indexFps = 0;
     }
 
-    game->centerOn(game->player);
+
+
 }

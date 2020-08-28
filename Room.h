@@ -13,7 +13,7 @@
 class Room: public QGraphicsItemGroup{
 
  public:
-    Room();
+    Room(double heightWall, double heightBridge);
     void constructor(int nSideGate, std::string typeOfRoom);
     void update_side_gate(int nSide, int xCoordPar, int yCoordPar);
 
@@ -29,10 +29,12 @@ class Room: public QGraphicsItemGroup{
 
 
 private:
-    int heightRoom;
-    int widthRoom;
-    int sizeCorner = 10;
-    int sizeWallHeight = 10;
+    double heightRoom;
+    double widthRoom;
+    double sizeCorner;
+    double sizeWallHeight;
+
+    double heightBridge;
 
     //define the type of room
     std::string type;
@@ -48,7 +50,7 @@ private:
     //function to create obstacle
     void createGround(int xSize, int ySize);
     void setGate(int nSide, int xSize, int ySize, int xCoord, int yCoord, bool update);
-    void setCorner(int xCoord, int yCoord);
+    void setCorner(int xCoord, int yCoord, int nSide);
 };
 
 #endif // ROOM_H

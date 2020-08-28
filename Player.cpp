@@ -6,16 +6,16 @@
 #include <QDebug>
 #include <QTimer>
 #include <QObject>
+#include <math.h>
 
 extern Game * game;
 
 Player::Player(double fps){
     //set value
-    speed = 240 / fps;
+    speed = 150 / fps;
 
     //shape player
-    QImage img(":/Source/Source/Image/Caractere/wizzard_m_idle_anim_f0_resize.png");
-    setPixmap(QPixmap::fromImage(img));
+    QImage img(":/Source/Source/Image/Caractere/wizzard_m_idle_anim_f0.png");
 
     weapon = new Weapon();
 
@@ -41,6 +41,23 @@ Player::Player(double fps){
     //
     xSize_Collider = colliderBottom->rect().width();
     ySize_Collider = colliderBottom->rect().height();
+
+    //set status (test)
+    status = 0;
+
+    //set index sprite
+    indexSprite = 0;
+
+    //set Sprite
+    spriteIdle.append(addSprite(":/Source/Source/Image/Caractere/wizzard_m_idle_anim_f0.png"));
+    spriteIdle.append(addSprite(":/Source/Source/Image/Caractere/wizzard_m_idle_anim_f1.png"));
+    spriteIdle.append(addSprite(":/Source/Source/Image/Caractere/wizzard_m_idle_anim_f2.png"));
+    spriteIdle.append(addSprite(":/Source/Source/Image/Caractere/wizzard_m_idle_anim_f3.png"));
+
+    //set Current Sprite
+    currentSprite = addSprite(":/Source/Source/Image/Caractere/wizzard_m_idle_anim_f0.png");
+
+    //spriteHit.
 }
 
 void Player::keyPressEvent(QKeyEvent *event)
@@ -71,11 +88,51 @@ double Player::get_angle()
     return angle;
 }
 
+void Player::updateSprite()
+{
+    double xPrev = x();
+    double yPrev = y();
+
+    currentSprite = spriteIdle.at(indexSprite);
+
+    if(verifMirroredSprite == true){
+        QPixmap mirrored = currentSprite->transformed(QTransform().scale(-1,1));
+        setPixmap(mirrored);
+    }
+    else {
+        setPixmap(*currentSprite);
+    }
+
+    if(indexSprite == 0){
+        setPos(xPrev ,yPrev + spriteIdle.at(spriteIdle.size() - 1)->height() - spriteIdle.at(indexSprite)->height());
+    }
+    else {
+        setPos(xPrev ,yPrev + spriteIdle.at(indexSprite - 1)->height() - spriteIdle.at(indexSprite)->height());
+    }
+
+    indexSprite ++;
+    if(indexSprite > spriteIdle.size() - 1){
+        indexSprite = 0;
+        //verifMirroredSprite = false;
+    }
+}
+
+QPixmap Player::get_currentSprite()
+{
+    return *currentSprite;
+}
+
+QPixmap * Player::addSprite(std::string pathFile)
+{
+    QPixmap * pixmap = new QPixmap();
+    pixmap->load(QString::fromStdString(pathFile));
+    return pixmap;
+}
+
 
 //fonction to move the player
 void Player::moving()
 {
-
     int xDisplacement = 0, yDisplacement = 0, xSign = 0, ySign = 0;
     bool verifLeft = false, verifRight = false, verifTop = false, verifBottom = false;
 
@@ -124,37 +181,54 @@ void Player::moving()
             verifTop = colliderVerif(colliding_items_Top);
         }
 
+        if(keysPressed_.size() == 1){
+            if(verifBottom == false && sPressed){
+                setPos(x(),y()+speed);
+            }
+            else if (verifTop == false && zPressed){
+                setPos(x(),y()-speed);
+            }
+            else if (verifLeft == false && qPressed){
+                setPos(x()-speed,y());
+            }
+            else if(verifRight == false && dPressed){
+                setPos(x()+speed,y());
+            }
+        }
+        else {
 
-        if(verifBottom == false && sPressed){
-            setPos(x(),y()+speed);
-        }
-        if (verifTop == false && zPressed){
-            setPos(x(),y()-speed);
-        }
-        if (verifLeft == false && qPressed){
-            setPos(x()-speed,y());
-        }
-        if(verifRight == false && dPressed){
-            setPos(x()+speed,y());
+            if(verifBottom == false && sPressed && verifRight == false && dPressed){
+                setPos(x() + int(speed / sqrt(2)), y() + int(speed / sqrt(2)));
+                qDebug() <<  + (speed / sqrt(2)) <<  + (speed / sqrt(2));
+            }
+            else if (verifTop == false && zPressed && verifLeft == false && qPressed ){
+                setPos(x() - int(speed / sqrt(2)),y() - int(speed / sqrt(2)));
+            }
+            else if (verifRight == false && dPressed && verifTop == false && zPressed){
+                setPos(x() + int(speed / sqrt(2)),y() - int(speed / sqrt(2)));
+            }
+            else if(verifLeft == false && qPressed && verifBottom == false && sPressed){
+                setPos(x() - int(speed / sqrt(2)),y() + int(speed / sqrt(2)));
+            }
         }
 
         if(verifBottom || verifTop || verifLeft || verifRight) {
-            if(verifBottom && sPressed){
+            if(sPressed){
                 xSign = 0;
                 ySign = 1;
                 moveCloseToWall(xSign, ySign, colliderBottom);
             }
-            if(verifTop && zPressed){
+            if(zPressed){
                 xSign = 0;
                 ySign = -1;
                 moveCloseToWall(xSign, ySign, colliderTop);
             }
-            if(verifLeft && qPressed){
+            if(qPressed){
                 xSign = -1;
                 ySign = 0;
                 moveCloseToWall(xSign, ySign, colliderLeft);
             }
-            if(verifRight && dPressed){
+            if(dPressed){
                 xSign = 1;
                 ySign = 0;
                 moveCloseToWall(xSign, ySign, colliderRight);
@@ -162,7 +236,7 @@ void Player::moving()
         }
     }
 
-
+    game->centerOn(x() + xCoordOrigin, y() + currentSprite->height()  + yCoordOrigin);
 }
 
 bool Player::colliderVerif(QList<QGraphicsItem *> listCollider)
@@ -171,7 +245,6 @@ bool Player::colliderVerif(QList<QGraphicsItem *> listCollider)
     for (int i = 0, n = listCollider.size(); i < n; ++i){
          if (typeid(*(listCollider[i])) == typeid(Wall)){
             verif = true;
-            qDebug() << i << " / " << listCollider.size();
             break;
          }
     }

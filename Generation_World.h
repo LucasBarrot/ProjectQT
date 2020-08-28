@@ -20,7 +20,11 @@ private:
     int numberRoom;
     int numberRoomHigh = 10;
     int numberRoomLow = 5;
-    int addBridge(int checkNumberBridge, int nRoomRandom, int xDisplacement, int yDisplacement,int height);
+
+    double heightWall;
+    double heightBridge;
+
+    int addBridge(int nSide, int checkNumberBridge, int nRoomRandom, int xDisplacement, int yDisplacement,int height);
     QVector<Room*>  tabRoomFree;
     //QVector<Room*> tabRoomFull;
     QVector<Bridge*>  tab_bridge;

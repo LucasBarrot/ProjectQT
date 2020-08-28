@@ -78,7 +78,8 @@ void Game::mouseMoveEvent(QMouseEvent *event)
     if(90 < asbAngle && asbAngle < 270 && verifRotationCaractere == false){
         QImage img(":/Source/Source/Image/Caractere/wizzard_m_idle_anim_f0_resize.png");
         img = img.mirrored(true, false);
-        player->setPixmap(QPixmap::fromImage(img));
+        player->setPixmap(player->get_currentSprite().transformed(QTransform().scale(-1,1)));
+        player->verifMirroredSprite = true;
         verifRotationCaractere = true;
 
         player->weapon->setPos(0,10);
@@ -87,7 +88,8 @@ void Game::mouseMoveEvent(QMouseEvent *event)
     }
     else if((asbAngle < 90 || 270 < asbAngle) && verifRotationCaractere == true){
         QImage img(":/Source/Source/Image/Caractere/wizzard_m_idle_anim_f0_resize.png");
-        player->setPixmap(QPixmap::fromImage(img));
+        player->setPixmap(player->get_currentSprite());
+        player->verifMirroredSprite = false;
         verifRotationCaractere = false;
         player->weapon->setPos(16-4,10);
         orientationWeapon = 60;
@@ -111,16 +113,22 @@ void Game::wheelEvent(QWheelEvent *event)
 }
 
 void Game::mousePressEvent(QMouseEvent *event){
-    Projectil * projectil = new Projectil();
-    projectil->setPos(player->pos() + player->weapon->pos());
+    mousePressed_.insert(event->button());
+    if(mousePressed_.size() == 1){
+        player->weapon->Shoot();
+    }
+}
 
-    tabProjectil.append(projectil);
-
-    projectil->setRotation(player->get_angle());
-    scene->addItem(projectil);
+void Game::mouseReleaseEvent(QMouseEvent *event){
+    mousePressed_.erase(event->button());
 }
 
 void Game::mouseDoubleClickEvent(QMouseEvent *event)
 {
 
+}
+
+bool Game::get_verifRotationCaracter()
+{
+    return verifRotationCaractere;
 }

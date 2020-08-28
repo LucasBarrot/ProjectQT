@@ -7,8 +7,10 @@
 
 class Projectil: public QGraphicsPixmapItem{
 public:
-    Projectil();
+    Projectil(double angle);
     void moveProjectil();
+private:
+    double angle;
 };
 
 #endif // PROJECTIL_H

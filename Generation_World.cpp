@@ -12,6 +12,9 @@ Generation_World::Generation_World(){
     srand(time(NULL));
     numberRoom = rand()%(numberRoomHigh-numberRoomLow + 1) + numberRoomLow;
     qDebug() << "Number Room : " << numberRoom;
+
+    heightWall = 16;
+    heightBridge = 16 * 5;
 }
 
 void Generation_World::generate()
@@ -19,15 +22,15 @@ void Generation_World::generate()
     //position : 0 = top, 1 = right, 2 = bottom, 3 = left
 
     //create the first room
-    Room * firstRoom = new Room();
+    Room * firstRoom = new Room(heightWall, heightBridge);
     tabRoomFree.append(firstRoom);
     scene()->addItem(tabRoomFree.at(0));
     // Argument "-1" because no other room
     tabRoomFree.at(0)->constructor(-1, "spawn");
     tabRoomFree.at(0)->setTransformOriginPoint(tabRoomFree.at(0)->get_height()/2,tabRoomFree.at(0)->get_width()/2);
 
-    int spaceXBetweenRoom = 400;
-    int spaceYBetweenRoom = 400;
+    int spaceXBetweenRoom = 16 * 25;
+    int spaceYBetweenRoom = 16 * 25;
 
     int next_coord_x, next_coord_y;
 
@@ -161,11 +164,10 @@ void Generation_World::generate()
             }
 
             //Create room
-            Room * new_room = new Room();
+            Room * new_room = new Room(heightWall, heightBridge);
             tabRoomFree.push_back(new_room);
 
             scene()->addItem(tabRoomFree.at(indexRoom));
-
 
             int randomTypeRoom = rand() % 4;
 
@@ -174,8 +176,7 @@ void Generation_World::generate()
             if(randomTypeRoom == 3 && checkNGiftRoom < 2){
                 tabRoomFree.at(indexRoom)->constructor(SidePreviousRoom, "giftRoom");
                 verifGiftRoom = true;
-                checkNGiftRoom ++;
-            }
+                checkNGiftRoom ++;   }
             else if(CheckRoom == numberRoom -1){
                 tabRoomFree.at(indexRoom)->constructor(SidePreviousRoom, "bossRoom");
             }
@@ -202,20 +203,23 @@ void Generation_World::generate()
 
 
             //Create bridge
+            Bridge * new_bridge = new Bridge(heightWall, heightBridge);
+            tab_bridge.push_back(new_bridge);
+
             if(WichSideToAddRoom == 0){
-                checkNumberBridge = addBridge(checkNumberBridge, indexRoomRandom, tabRoomFree.at(indexRoomRandom)->get_height()/2 - 100 / 2, -lenghtBetweenTwoRoomY ,lenghtBetweenTwoRoomY);
+                checkNumberBridge = addBridge(WichSideToAddRoom, checkNumberBridge, indexRoomRandom, tabRoomFree.at(indexRoomRandom)->get_height()/2 - tab_bridge.at(checkNumberBridge)->get_width() / 2, -lenghtBetweenTwoRoomY ,lenghtBetweenTwoRoomY);
             }
             if(WichSideToAddRoom == 1){
-                checkNumberBridge = addBridge(checkNumberBridge, indexRoomRandom, tabRoomFree.at(indexRoomRandom)->get_width(),  tabRoomFree.at(indexRoomRandom)->get_height()-  (tabRoomFree.at(indexRoomRandom)->get_height()/2 - 100 / 2),lenghtBetweenTwoRoomX);
-                tab_bridge.at(checkNumberBridge - 1)->group->setRotation(-90);
+                checkNumberBridge = addBridge(WichSideToAddRoom, checkNumberBridge, indexRoomRandom, tabRoomFree.at(indexRoomRandom)->get_width(),  (tabRoomFree.at(indexRoomRandom)->get_height() - tab_bridge.at(checkNumberBridge)->get_width())/2,lenghtBetweenTwoRoomX);
+//                tab_bridge.at(checkNumberBridge - 1)->group->setRotation(-90);
             }
             if(WichSideToAddRoom == 2){
-                checkNumberBridge = addBridge(checkNumberBridge, indexRoomRandom, tabRoomFree.at(indexRoomRandom)->get_height()/2 - 100 / 2, tabRoomFree.at(indexRoomRandom)->get_height(),lenghtBetweenTwoRoomY);
+                checkNumberBridge = addBridge(WichSideToAddRoom, checkNumberBridge, indexRoomRandom, tabRoomFree.at(indexRoomRandom)->get_height()/2 - tab_bridge.at(checkNumberBridge)->get_width() / 2, tabRoomFree.at(indexRoomRandom)->get_height(),lenghtBetweenTwoRoomY);
             }
             if(WichSideToAddRoom == 3)
             {
-                checkNumberBridge = addBridge(checkNumberBridge, indexRoomRandom, 0, tabRoomFree.at(indexRoomRandom)->get_height()/2 - 100 / 2, lenghtBetweenTwoRoomX);
-                tab_bridge.at(checkNumberBridge - 1)->group->setRotation(90);
+                checkNumberBridge = addBridge(WichSideToAddRoom, checkNumberBridge, indexRoomRandom, -lenghtBetweenTwoRoomX, tabRoomFree.at(indexRoomRandom)->get_height()/2 - tab_bridge.at(checkNumberBridge)->get_width() / 2, lenghtBetweenTwoRoomX);
+//                tab_bridge.at(checkNumberBridge - 1)->group->setRotation(90);
             }
 
 
@@ -245,11 +249,9 @@ void Generation_World::generate()
 }
 
 
-int Generation_World::addBridge(int checkNumberBridge, int nRoomRandom, int xdisplacement, int yDisplacement, int height){
-    Bridge * new_bridge = new Bridge();
-    tab_bridge.push_back(new_bridge);
+int Generation_World::addBridge(int nSide, int checkNumberBridge, int nRoomRandom, int xdisplacement, int yDisplacement, int height){
     scene()->addItem(tab_bridge.at(checkNumberBridge));
-    tab_bridge.at(checkNumberBridge)->Constructor(height);
+    tab_bridge.at(checkNumberBridge)->ConstructBridge(height, nSide);
     tab_bridge.at(checkNumberBridge)->group->setPos(tabRoomFree.at(nRoomRandom)->group->x() + xdisplacement, tabRoomFree.at(nRoomRandom)->group->y() + yDisplacement);
     checkNumberBridge ++;
     return checkNumberBridge;

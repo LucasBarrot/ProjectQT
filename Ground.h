@@ -6,7 +6,7 @@
 
 class Ground: public QGraphicsRectItem{
 public:
-    Ground(int Height, int Weight, int random);
+    Ground(int Height, int Weight, int random, int random_2);
 };
 
 #endif // GROUND_H

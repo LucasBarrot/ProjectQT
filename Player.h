@@ -27,11 +27,20 @@ public:
 
     double get_angle();
 
+    //update Sprite for each frame
+    void updateSprite();
+
+    QPixmap get_currentSprite();
+
     //Collider
     Collider * colliderBottom;
     Collider * colliderTop;
     Collider * colliderLeft;
     Collider * colliderRight;
+
+
+    //verif rotation sprite (test)
+    bool verifMirroredSprite = false;
 
     //Weapon (test)
     Weapon * weapon;
@@ -53,14 +62,32 @@ private:
     //
     double xCoordOrigin;
     double yCoordOrigin;
-    double x_prev;
-    double y_prev;
     //of pixel the caracter move
     double speed;
     //angle
     double angle;
     //QSet<int> keysPressed_;
     std::set<int> keysPressed_;
+
+    //status caracter
+    // status = 0 : idle
+    //status = 1: move
+    //status = 3 : hit
+    int status;
+
+    //index Sprite play;
+    int indexSprite;
+
+    //add Sprite
+    QPixmap * addSprite(std::string pathFile);
+
+    //current sprite
+    QPixmap * currentSprite;
+
+    //sprite
+    QVector<QPixmap*> spriteIdle;
+    QList<QImage *> spriteRun;
+    QList<QImage *> spriteHit;
 
     bool colliderVerif(QList<QGraphicsItem *> listCollider);
     void moveCloseToWall(int xSign, int ySign, Collider * collider);
