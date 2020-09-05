@@ -24,6 +24,7 @@ void Generation_World::generate()
     //create the first room
     Room * firstRoom = new Room(heightWall, heightBridge);
     tabRoomFree.append(firstRoom);
+    tabRoom.append(firstRoom);
     scene()->addItem(tabRoomFree.at(0));
     // Argument "-1" because no other room
     tabRoomFree.at(0)->constructor(-1, "spawn");
@@ -166,12 +167,16 @@ void Generation_World::generate()
             //Create room
             Room * new_room = new Room(heightWall, heightBridge);
             tabRoomFree.push_back(new_room);
+            tabRoom.push_back(new_room);
 
             scene()->addItem(tabRoomFree.at(indexRoom));
 
             int randomTypeRoom = rand() % 4;
 
             bool verifGiftRoom = false;
+
+            double xOriginsRandomRoom = tabRoomFree.at(indexRoomRandom)->group->x() +  tabRoomFree.at(indexRoomRandom)->transformOriginPoint().x() ;
+            double yOriginsRandomRoom = tabRoomFree.at(indexRoomRandom)->group->y() +  tabRoomFree.at(indexRoomRandom)->transformOriginPoint().y() ;
 
             if(randomTypeRoom == 3 && checkNGiftRoom < 2){
                 tabRoomFree.at(indexRoom)->constructor(SidePreviousRoom, "giftRoom");
@@ -187,20 +192,17 @@ void Generation_World::generate()
             tabRoomFree.at(indexRoom)->setTransformOriginPoint(tabRoomFree.at(indexRoom)->get_width()/2,tabRoomFree.at(indexRoom)->get_height()/2);
             qDebug() << tabRoomFree.at(indexRoom)->transformOriginPoint();
 
-            double xOriginsRandomRoom = tabRoomFree.at(indexRoomRandom)->group->x() +  tabRoomFree.at(indexRoomRandom)->transformOriginPoint().x() ;
-            double yOriginsRandomRoom = tabRoomFree.at(indexRoomRandom)->group->y() +  tabRoomFree.at(indexRoomRandom)->transformOriginPoint().y() ;
-
             qDebug() << "Room n°" << indexRoomRandom << " : x() : " <<xOriginsRandomRoom << ", y() : " << yOriginsRandomRoom;
 
             tabRoomFree.at(indexRoomRandom)->update_side_gate(WichSideToAddRoom, tabRoomFree.at(indexRoomRandom)->group->x(), tabRoomFree.at(indexRoomRandom)->group->y());
             tabRoomFree.at(indexRoom)->group->setPos(xOriginsRandomRoom  + next_coord_x - tabRoomFree.at(indexRoom)->transformOriginPoint().x(), yOriginsRandomRoom + next_coord_y - tabRoomFree.at(indexRoom)->transformOriginPoint().y());
+            tabRoomFree.at(indexRoom)->setPos(xOriginsRandomRoom  + next_coord_x - tabRoomFree.at(indexRoom)->transformOriginPoint().x(), yOriginsRandomRoom + next_coord_y - tabRoomFree.at(indexRoom)->transformOriginPoint().y());
             qDebug() << "Room created n°" << indexRoom << " : x() : " <<xOriginsRandomRoom  + next_coord_x  - tabRoomFree.at(indexRoom)->transformOriginPoint().x() << ", y() : " << yOriginsRandomRoom + next_coord_y - tabRoomFree.at(indexRoom)->transformOriginPoint().y();
             tabRoomFree.at(indexRoom)->set_ifRoom(SidePreviousRoom);
             tabRoomFree.at(indexRoomRandom)->set_ifRoom(WichSideToAddRoom);
 
             int lenghtBetweenTwoRoomX = spaceXBetweenRoom - tabRoomFree.at(indexRoomRandom)->get_width()/2 - tabRoomFree.at(indexRoom)->get_width()/2;
             int lenghtBetweenTwoRoomY = spaceYBetweenRoom - tabRoomFree.at(indexRoomRandom)->get_height()/2 - tabRoomFree.at(indexRoom)->get_height()/2;
-
 
             //Create bridge
             Bridge * new_bridge = new Bridge(heightWall, heightBridge);
@@ -246,6 +248,11 @@ void Generation_World::generate()
 
     qDebug() << CheckRoom;
     qDebug() << checkNumberBridge;
+}
+
+double Generation_World::get_heightWall()
+{
+    return heightWall;
 }
 
 

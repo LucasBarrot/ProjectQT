@@ -6,38 +6,43 @@
 #include <QMouseEvent>
 #include <set>
 #include <QObject>
+#include <QGraphicsObject>
 
-
-#include "Collider.h"
 #include "Weapon.h"
+#include "Entity.h"
+#include "SpawnZone.h"
 
 
-class Player: public QObject, public QGraphicsPixmapItem{
+class Player: public QObject, public QGraphicsRectItem{
     Q_OBJECT
 public:
     Player(double fps);
     void keyPressEvent(QKeyEvent * event);
     void keyReleaseEvent(QKeyEvent *event);
 
+    //move caracter
     void moving();
 
-    QPointF getOrigin();
+    //check if player is in a room
+    void verifPlayerInRoom();
 
+    //get origin of player
+    QPointF getOriginMapToScene();
+
+    //set the angle of player
     void set_angle(double angle);
 
+    //player is in room
+    SpawnZone * get_playerIsInRoom();
+
+    //return angle of player
     double get_angle();
 
-    //update Sprite for each frame
-    void updateSprite();
+    //set entity player
+    Entity * playerEntity;
 
-    QPixmap get_currentSprite();
-
-    //Collider
-    Collider * colliderBottom;
-    Collider * colliderTop;
-    Collider * colliderLeft;
-    Collider * colliderRight;
-
+    //set in scene object of player (playerEntity and collider)
+    void set_objectOfPlayerInScene();
 
     //verif rotation sprite (test)
     bool verifMirroredSprite = false;
@@ -52,44 +57,23 @@ signals:
     /// Emitted when a key is released.
     /// @param key Integer describing the key that was released. Compare with constants in Qt::key_.
     void keyReleased(int key);
-private:
-    //Size of player
-    double xSize_player;
-    double ySize_player;
-    //Size of collider
-    double xSize_Collider;
-    double ySize_Collider;
-    //
-    double xCoordOrigin;
-    double yCoordOrigin;
-    //of pixel the caracter move
-    double speed;
+private:    
     //angle
     double angle;
     //QSet<int> keysPressed_;
     std::set<int> keysPressed_;
+    //verif if a key as been stroke
+    bool verifFirstKeyMOuvement;
 
-    //status caracter
-    // status = 0 : idle
-    //status = 1: move
-    //status = 3 : hit
-    int status;
+    //define entity player;
+    Entity * set_entityPlayer(int player);
 
-    //index Sprite play;
-    int indexSprite;
+    //To know in wich room is the player
+    SpawnZone * playerIsInRoom;
 
-    //add Sprite
-    QPixmap * addSprite(std::string pathFile);
-
-    //current sprite
-    QPixmap * currentSprite;
-
-    //sprite
-    QVector<QPixmap*> spriteIdle;
-    QList<QImage *> spriteRun;
-    QList<QImage *> spriteHit;
-
+    //verif if player not collid with
     bool colliderVerif(QList<QGraphicsItem *> listCollider);
+
     void moveCloseToWall(int xSign, int ySign, Collider * collider);
 
 

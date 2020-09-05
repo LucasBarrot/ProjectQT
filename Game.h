@@ -35,6 +35,8 @@ public:
 private:
     double orientationWeapon;
     bool verifRotationCaractere = true;
+
+    bool verifLeftClick;
 };
 
 #endif // GAME_H

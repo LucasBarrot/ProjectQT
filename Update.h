@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QTimer>
+
 #include <QGraphicsItem>
 
 #include "Game.h"

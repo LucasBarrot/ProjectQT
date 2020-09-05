@@ -23,8 +23,7 @@ Room::Room(double argHeightWall, double argHeightBridge){
     setParentItem(NULL);
 }
 
-void Room::constructor(int nSideGate, std::string typeOfRoom)
-{
+void Room::constructor(int nSideGate, std::string typeOfRoom){
     type = typeOfRoom;
 
     if(type.compare("spawn") == 0){
@@ -55,7 +54,6 @@ void Room::constructor(int nSideGate, std::string typeOfRoom)
     setCorner(widthRoom - sizeCorner, 0, 1);
     setCorner(widthRoom - sizeCorner,heightRoom - sizeCorner, 3);
     setCorner(0,heightRoom - sizeCorner, 5);
-
 
     //wall
     //wall top
@@ -95,13 +93,12 @@ void Room::constructor(int nSideGate, std::string typeOfRoom)
         }
     }
 
+
     //add to the scene
     scene()->addItem(group);
-
 }
 
-void Room::update_side_gate(int nSide, int xCoordPar, int yCoordPar)
-{
+void Room::update_side_gate(int nSide, int xCoordPar, int yCoordPar){
     //update the side to put a gate instead of wall
     //first we remove the wall
     //after we the fonction that create gate
@@ -132,28 +129,33 @@ void Room::update_side_gate(int nSide, int xCoordPar, int yCoordPar)
     }
 }
 
-int Room::get_nSideNotRoom()
-{
+void Room::set_spawnZone(QPointF posSpawnZone){
+    //SpawnZone
+    spawnZone = new SpawnZone(0,0, widthRoom - 2 * sizeCorner, heightRoom - 2 * sizeCorner, type);
+    //spawnZone->setParentItem(this);
+    spawnZone->setPos(posSpawnZone + QPointF(sizeCorner, sizeCorner));
+    scene()->addItem(spawnZone);
+    spawnZone->spawn();
+}
+
+int Room::get_nSideNotRoom(){
     return nSideNotRoom;
 }
 
-double Room::get_height()
-{
+double Room::get_height(){
     return heightRoom;
 }
 
-double Room::get_width()
-{
+double Room::get_width(){
     return widthRoom;
 }
 
-std::string Room::get_type()
-{
+std::string Room::get_type(){
     return type;
 }
 
-bool Room::get_ifRoom(int nSide)
-{
+
+bool Room::get_ifRoom(int nSide){
     if(nSide == 0){
         return ifRoomTop;
     }
@@ -170,8 +172,7 @@ bool Room::get_ifRoom(int nSide)
     return false;
 }
 
-void Room::set_ifRoom(int nSide)
-{
+void Room::set_ifRoom(int nSide){
     if(nSide == 0){
          ifRoomTop = true;
     }
@@ -187,9 +188,6 @@ void Room::set_ifRoom(int nSide)
 
     nSideNotRoom --;
 }
-
-
-
 
 void Room::createGround(int xSize, int ySize){
     //set the size of each cell

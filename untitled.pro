@@ -19,12 +19,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     Bridge.cpp \
     Collider.cpp \
+    Enemy.cpp \
+    Entity.cpp \
     Game.cpp \
     Generation_World.cpp \
     Ground.cpp \
     Player.cpp \
     Projectil.cpp \
     Room.cpp \
+    SpawnZone.cpp \
     Update.cpp \
     Wall.cpp \
     Weapon.cpp \
@@ -33,12 +36,15 @@ SOURCES += \
 HEADERS += \
     Bridge.h \
     Collider.h \
+    Enemy.h \
+    Entity.h \
     Game.h \
     Generation_World.h \
     Ground.h \
     Player.h \
     Projectil.h \
     Room.h \
+    SpawnZone.h \
     Update.h \
     Wall.h \
     Weapon.h

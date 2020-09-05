@@ -6,6 +6,6 @@
 Collider::Collider(double xSize, double ySize)
 {
     setRect(0, 0, xSize, ySize);
-    setVisible(false);
+    //setVisible(false);
 
 }
