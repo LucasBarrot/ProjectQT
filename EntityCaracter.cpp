@@ -1,4 +1,4 @@
-#include "Entity.h"
+#include "EntityCaracter.h"
 
 #include "Game.h"
 
@@ -32,7 +32,12 @@ bool Entity::get_entityIsPlayer()
 }
 
 void Entity::set_displacement(int displacementPerSecond, int fps){
-    displacement = displacementPerSecond / fps;
+    if(displacementPerSecond != 0 && fps != 0){
+        displacement = displacementPerSecond / fps;
+    }
+    else {
+        displacement = 0;
+    }
 }
 
 double Entity::get_displacement(){
@@ -184,3 +189,33 @@ double Entity::get_widthCollider(){
 double Entity::get_heightCollider(){
     return heightCollider;
 }
+
+bool Entity::colliderVerif(QList<QGraphicsItem *> listCollider, QString nameObjectCollide, QString nameObjectCollide_two, QString nameObjectCollide_three)
+{
+    bool verif = false;
+    for (int i = 0, n = listCollider.size(); i < n; ++i){
+        if(nameObjectCollide_two == NULL && nameObjectCollide_three == NULL){
+             if (typeid(*(listCollider[i])).name() == nameObjectCollide){
+                verif = true;
+                break;
+             }
+        }
+        else if (nameObjectCollide_two != NULL && nameObjectCollide_three == NULL){
+            if (typeid(*(listCollider[i])).name() == nameObjectCollide || typeid(*(listCollider[i])).name() == nameObjectCollide_two){
+               verif = true;
+               break;
+            }
+        }
+        else {
+            if (typeid(*(listCollider[i])).name() == nameObjectCollide || typeid(*(listCollider[i])).name() == nameObjectCollide_two || typeid(*(listCollider[i])).name() == nameObjectCollide_three){
+               verif = true;
+               break;
+            }
+        }
+    }
+    return verif;
+}
+
+
+
+

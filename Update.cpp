@@ -22,22 +22,26 @@ void Update::updateBaseOnFps()
     //move player
     game->player->moving();
 
+    //update enemi
+    for(int indexRoom = 0; indexRoom < game->world->tabRoom.size(); indexRoom++){
+        Room * tmpRoom = game->world->tabRoom.at(indexRoom);
+        for(int indexEnemy = 0; indexEnemy < tmpRoom->spawnZone->tabEnemy.size(); indexEnemy++){
+            Enemy * tmpEnemy = tmpRoom->spawnZone->tabEnemy.at(indexEnemy);
+            if(indexFps % int(fps / 3) == 0 && indexFps != 0) {
+                tmpEnemy->UpdateSpriteEnemy();
+            }
+            tmpEnemy->UpdateEnemy();
+        }
+    }
+
+    //change sprite player
+    if(indexFps % int(fps / 3) == 0 && indexFps != 0){
+        game->player->playerEntity->chooseSprite();
+    }
+
     //move projectil
     for(int indexProjectil = 0; indexProjectil < game->tabProjectil.size(); indexProjectil++){
         game->tabProjectil.at(indexProjectil)->updatePositionOnScreen(indexProjectil);
-    }
-
-    //change sprite player and enemy
-    if(indexFps % int(fps / 3) == 0 && indexFps != 0){
-        for(int indexRoom = 0; indexRoom < game->world->tabRoom.size(); indexRoom++){
-            Room * tmpRoom = game->world->tabRoom.at(indexRoom);
-            for(int indexEnemy = 0; indexEnemy < tmpRoom->spawnZone->tabEnemy.size(); indexEnemy++){
-                Enemy * tmpEnemy = tmpRoom->spawnZone->tabEnemy.at(indexEnemy);
-                tmpEnemy->UpdateEnemy();
-            }
-        }
-
-        game->player->playerEntity->chooseSprite();
     }
 
     //center view on player

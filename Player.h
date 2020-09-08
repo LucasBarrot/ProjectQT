@@ -9,12 +9,11 @@
 #include <QGraphicsObject>
 
 #include "Weapon.h"
-#include "Entity.h"
+#include "EntityCaracter.h"
 #include "SpawnZone.h"
 
 
-class Player: public QObject, public QGraphicsRectItem{
-    Q_OBJECT
+class Player: public QGraphicsRectItem{
 public:
     Player(double fps);
     void keyPressEvent(QKeyEvent * event);
@@ -70,9 +69,6 @@ private:
 
     //To know in wich room is the player
     SpawnZone * playerIsInRoom;
-
-    //verif if player not collid with
-    bool colliderVerif(QList<QGraphicsItem *> listCollider);
 
     void moveCloseToWall(int xSign, int ySign, Collider * collider);
 

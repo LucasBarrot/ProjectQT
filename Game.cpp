@@ -41,6 +41,7 @@ Game::Game(QWidget * parent){
     scene->addItem(player->weapon);
     player->weapon->setParentItem(player);
 
+
     //allow the view to recieve mouse informations
     setMouseTracking(true);
 
@@ -60,9 +61,16 @@ Game::Game(QWidget * parent){
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
 
+    ui = new UI();
+
+    scene->addItem(ui);
+
+    ui->printOnScreen();
+
     //define scene
     setScene(scene);
     setSceneRect(scene->sceneRect());
+
 
     //add update
     Update * update = new Update(fps);
@@ -79,8 +87,8 @@ void Game::mouseMoveEvent(QMouseEvent *event)
     double asbAngle = abs(-1 * line.angle());
     double angle = -1 * line.angle();
     //line to get angle from weapon
-    QPointF pt1Weapon(mapFromScene(QPoint(player->x() + player->rect().width()/2 + player->weapon->get_lineRotationWeapon().p2().x(),
-                                          player->y() + player->rect().height()/2 + player->weapon->get_lineRotationWeapon().p2().y())));
+    QPointF pt1Weapon(mapFromScene(QPoint(player->x() + player->rect().width()/2 + player->weapon->entityWeapon->get_lineRotationWeapon().p2().x(),
+                                          player->y() + player->rect().height()/2 + player->weapon->entityWeapon->get_lineRotationWeapon().p2().y())));
     QPointF pt2Weapon(event->pos());
     QLineF lineAngleWeapon(pt1Weapon,pt2Weapon);
     double angleWeapon = -1 * lineAngleWeapon.angle();
@@ -89,7 +97,7 @@ void Game::mouseMoveEvent(QMouseEvent *event)
         player->playerEntity->setPixmap(player->playerEntity->get_currentSprite().transformed(QTransform().scale(-1,1)));
         player->playerEntity->set_verifRotation(true);
         player->weapon->setPos(0,10);
-        player->weapon->set_lineNewPositionWeapon(QPointF(0,10));
+        player->weapon->entityWeapon->turnWeapon(true);
         orientationWeapon = -180 - 60;
 
     }
@@ -97,18 +105,18 @@ void Game::mouseMoveEvent(QMouseEvent *event)
         player->playerEntity->setPixmap(player->playerEntity->get_currentSprite());
         player->playerEntity->set_verifRotation(false);
         player->weapon->setPos(16-4,10);
-        player->weapon->set_lineNewPositionWeapon(QPointF(16-4,10));
+        player->weapon->entityWeapon->turnWeapon(false);
         orientationWeapon = 60;
     }
 
     player->weapon->setRotation(angle + orientationWeapon);
-    player->weapon->set_lineRotationWeapon(angle);
-    player->weapon->set_angleAiming(angleWeapon);
+    player->weapon->entityWeapon->set_lineRotationWeapon(angle);
+    player->weapon->entityWeapon->set_angleWeapon(angleWeapon);
 }
 
 void Game::resizeEvent(QResizeEvent *event){
     //resize the scene rect, set the view's scene rect to this new scene rect
-    scene->setSceneRect(scene->itemsBoundingRect().x() - width()/4, scene->itemsBoundingRect().y() - height()/4,scene->itemsBoundingRect().size().rwidth() + width()/2,scene->itemsBoundingRect().size().rheight() + height()/2);
+    scene->setSceneRect(scene->itemsBoundingRect().x() - width()/4, scene->itemsBoundingRect().y() - height()/4,scene->itemsBoundingRect().size().rwidth() + width()/2, scene->itemsBoundingRect().size().rheight() + height()/2);
     setSceneRect(scene->sceneRect());
 }
 
@@ -135,9 +143,15 @@ void Game::mouseReleaseEvent(QMouseEvent *event){
     }
 }
 
-void Game::mouseDoubleClickEvent(QMouseEvent *event)
-{
-
+void Game::mouseDoubleClickEvent(QMouseEvent *event){
+    mousePressed_.insert(event->button());
+    if(mousePressed_.count(Qt::RightButton)){
+        player->weapon->specialShoot();
+    }
+    if(mousePressed_.count(Qt::LeftButton) && !verifLeftClick){
+        player->weapon->simpleShoot();
+        verifLeftClick = true;
+    }
 }
 
 bool Game::get_verifRotationCaracter()

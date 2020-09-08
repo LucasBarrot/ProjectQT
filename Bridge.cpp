@@ -7,6 +7,7 @@
 #include <random>
 #include <time.h>
 
+
 Bridge::Bridge(double argHeightWall, double agrHeightBridge)
 {
     group = new QGraphicsItemGroup();

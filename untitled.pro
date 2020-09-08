@@ -20,7 +20,8 @@ SOURCES += \
     Bridge.cpp \
     Collider.cpp \
     Enemy.cpp \
-    Entity.cpp \
+    EntityCaracter.cpp \
+    EntityWeapon.cpp \
     Game.cpp \
     Generation_World.cpp \
     Ground.cpp \
@@ -28,6 +29,7 @@ SOURCES += \
     Projectil.cpp \
     Room.cpp \
     SpawnZone.cpp \
+    UI.cpp \
     Update.cpp \
     Wall.cpp \
     Weapon.cpp \
@@ -37,7 +39,8 @@ HEADERS += \
     Bridge.h \
     Collider.h \
     Enemy.h \
-    Entity.h \
+    EntityCaracter.h \
+    EntityWeapon.h \
     Game.h \
     Generation_World.h \
     Ground.h \
@@ -45,6 +48,7 @@ HEADERS += \
     Projectil.h \
     Room.h \
     SpawnZone.h \
+    UI.h \
     Update.h \
     Wall.h \
     Weapon.h

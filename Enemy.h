@@ -2,15 +2,23 @@
 #define ENEMY_H
 
 #include <QGraphicsRectItem>
+#include <QLineF>
+#include <QObject>
+#include <QTimer>
 
-#include "Entity.h"
+#include "EntityCaracter.h"
+#include "Projectil.h"
 
-class Enemy : public QGraphicsRectItem {
+class Enemy : public QObject, public QGraphicsRectItem {
+    Q_OBJECT
 public:
     Enemy();
 
     //update Enemy
     void UpdateEnemy();
+
+    //update sprite enemy
+    void UpdateSpriteEnemy();
 
     //prevPos
     void set_prevPos(QPointF argPrevPos);
@@ -24,14 +32,26 @@ public:
     //set entity enemy
     Entity * enemyEntity;
 
-
+    //set a collider to detect they are obstacle to shoot player
+    QGraphicsRectItem * lineOfSight;
 
 private:
     //set a entity necromancer
     Entity * set_necromancer();
 
+    //path image projectil shooted by enemy
+    QString pathImageProjectil;
+
     //minimal distance to player of the enemy
     double distanceMinamalToPlayer;
+
+    //shoot
+    //shoot function
+    void shootSimple(double angle);
+    //update variable shootSimpleReady
+    void updateShootSimple();
+    //variable to check if shoot is ready
+    bool shootSimpleReady;
 
     //move enemy
     void moveEnemy(double argAngle);

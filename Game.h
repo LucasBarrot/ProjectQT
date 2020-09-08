@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "Update.h"
 #include "Projectil.h"
+#include "UI.h"
 
 class Game: public QGraphicsView{
 public:
@@ -25,6 +26,7 @@ public:
     QGraphicsScene * scene;
     Generation_World * world;
     Player * player;
+    UI * ui;
 
     QVector<Projectil*> tabProjectil;
 

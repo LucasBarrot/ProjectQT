@@ -1,6 +1,8 @@
 #include "Player.h"
+
 #include "Wall.h"
 #include "Game.h"
+#include "Enemy.h"
 
 #include <QKeyEvent>
 #include <QDebug>
@@ -17,8 +19,12 @@ Player::Player(double fps){
     //set player
     playerEntity = set_entityPlayer(fps);
 
+
+
     //add weapon
      weapon = new Weapon(playerEntity->get_xCoordOrigin(), playerEntity->get_yCoordOrigin());
+
+     weapon->setParentItem(this);
 }
 
 void Player::keyPressEvent(QKeyEvent *event)
@@ -139,7 +145,8 @@ Entity * Player::set_entityPlayer(int fps)
 
 //fonction to move the player
 void Player::moving()
-{
+{   
+    //
     int xDisplacement = 0, yDisplacement = 0, xSign = 0, ySign = 0;
     bool verifLeft = false, verifRight = false, verifTop = false, verifBottom = false;
 
@@ -167,8 +174,10 @@ void Player::moving()
             QList<QGraphicsItem *> colliding_items_Left = playerEntity->colliderLeft->collidingItems();
             QList<QGraphicsItem *> colliding_items_Right = playerEntity->colliderRight->collidingItems();
 
-            verifLeft = colliderVerif(colliding_items_Left);
-            verifRight = colliderVerif(colliding_items_Right);
+           QString name = typeid(Wall).name();
+
+            verifLeft = playerEntity->colliderVerif(colliding_items_Left, typeid(Wall).name(), typeid (Enemy).name());
+            verifRight = playerEntity->colliderVerif(colliding_items_Right, typeid(Wall).name(), typeid (Enemy).name());
         }
         if(!(zPressed && sPressed) && (zPressed || sPressed)){
             if (zPressed){
@@ -188,8 +197,8 @@ void Player::moving()
             QList<QGraphicsItem *> colliding_items_Bottom = playerEntity->colliderBottom->collidingItems();
             QList<QGraphicsItem *> colliding_items_Top = playerEntity->colliderTop->collidingItems();
 
-            verifBottom =  colliderVerif(colliding_items_Bottom);
-            verifTop = colliderVerif(colliding_items_Top);
+            verifBottom = playerEntity->colliderVerif(colliding_items_Bottom, typeid (Wall).name(), typeid (Enemy).name());
+            verifTop = playerEntity->colliderVerif(colliding_items_Top, typeid(Wall).name(), typeid (Enemy).name());
         }
 
         if(keysPressed_.size() == 1){
@@ -277,20 +286,6 @@ void Player::verifPlayerInRoom()
 
 }
 
-bool Player::colliderVerif(QList<QGraphicsItem *> listCollider)
-{
-    bool verif = false;
-    for (int i = 0, n = listCollider.size(); i < n; ++i){
-         if (typeid(*(listCollider[i])) == typeid (Wall)){
-            verif = true;
-            break;
-         }
-    }
-
-
-    return verif;
-}
-
 void Player::moveCloseToWall(int xSign, int ySign, Collider * collider)
 {
     int xDisplacement = 0, yDisplacement = 0;
@@ -306,7 +301,7 @@ void Player::moveCloseToWall(int xSign, int ySign, Collider * collider)
 
         QList<QGraphicsItem *> colliding_items= collider->collidingItems();
 
-        bool verif =  colliderVerif(colliding_items);
+        bool verif =  playerEntity->colliderVerif(colliding_items, typeid (Wall).name(), typeid (Enemy).name());
 
         if(verif){
             break;

@@ -67,6 +67,9 @@ public:
     double get_widthCollider();
     double get_heightCollider();
 
+    //verif if player not collid with
+    bool colliderVerif(QList<QGraphicsItem *> listCollider, QString nameObjectCollide, QString nameObjectCollide_two = NULL, QString nameObjectCollide_three = NULL);
+
     //collider object
     Collider * colliderBottom;
     Collider * colliderTop;
