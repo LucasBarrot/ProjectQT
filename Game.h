@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "Update.h"
 #include "Projectil.h"
+#include "UI.h"
 
 class Game: public QGraphicsView{
 public:
@@ -17,20 +18,27 @@ public:
     void resizeEvent(QResizeEvent *event);
     void wheelEvent(QWheelEvent *event);
     void mousePressEvent(QMouseEvent * event);
+    void mouseReleaseEvent(QMouseEvent * event);
     void mouseDoubleClickEvent(QMouseEvent *event);
+
+    bool get_verifRotationCaracter();
 
     QGraphicsScene * scene;
     Generation_World * world;
     Player * player;
+    UI * ui;
 
     QVector<Projectil*> tabProjectil;
 
-    bool verifRotationCaractere = true;
+    std::set<int> mousePressed_;
 
     double fps;
 
 private:
     double orientationWeapon;
+    bool verifRotationCaractere = true;
+
+    bool verifLeftClick;
 };
 
 #endif // GAME_H

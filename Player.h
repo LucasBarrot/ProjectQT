@@ -6,32 +6,45 @@
 #include <QMouseEvent>
 #include <set>
 #include <QObject>
+#include <QGraphicsObject>
 
-
-#include "Collider.h"
 #include "Weapon.h"
+#include "EntityCaracter.h"
+#include "SpawnZone.h"
 
 
-class Player: public QObject, public QGraphicsPixmapItem{
-    Q_OBJECT
+class Player: public QGraphicsRectItem{
 public:
     Player(double fps);
     void keyPressEvent(QKeyEvent * event);
     void keyReleaseEvent(QKeyEvent *event);
 
+    //move caracter
     void moving();
 
-    QPointF getOrigin();
+    //check if player is in a room
+    void verifPlayerInRoom();
 
+    //get origin of player
+    QPointF getOriginMapToScene();
+
+    //set the angle of player
     void set_angle(double angle);
 
+    //player is in room
+    SpawnZone * get_playerIsInRoom();
+
+    //return angle of player
     double get_angle();
 
-    //Collider
-    Collider * colliderBottom;
-    Collider * colliderTop;
-    Collider * colliderLeft;
-    Collider * colliderRight;
+    //set entity player
+    Entity * playerEntity;
+
+    //set in scene object of player (playerEntity and collider)
+    void set_objectOfPlayerInScene();
+
+    //verif rotation sprite (test)
+    bool verifMirroredSprite = false;
 
     //Weapon (test)
     Weapon * weapon;
@@ -43,27 +56,21 @@ signals:
     /// Emitted when a key is released.
     /// @param key Integer describing the key that was released. Compare with constants in Qt::key_.
     void keyReleased(int key);
-private:
-    //Size of player
-    double xSize_player;
-    double ySize_player;
-    //Size of collider
-    double xSize_Collider;
-    double ySize_Collider;
-    //
-    double xCoordOrigin;
-    double yCoordOrigin;
-    double x_prev;
-    double y_prev;
-    //of pixel the caracter move
-    double speed;
+private:    
     //angle
     double angle;
     //QSet<int> keysPressed_;
     std::set<int> keysPressed_;
+    //verif if a key as been stroke
+    bool verifFirstKeyMOuvement;
 
-    bool colliderVerif(QList<QGraphicsItem *> listCollider);
-    void moveCloseToWall();
+    //define entity player;
+    Entity * set_entityPlayer(int player);
+
+    //To know in wich room is the player
+    SpawnZone * playerIsInRoom;
+
+    void moveCloseToWall(int xSign, int ySign, Collider * collider);
 
 
 };

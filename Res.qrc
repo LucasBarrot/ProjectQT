@@ -1,17 +1,41 @@
 <RCC>
     <qresource prefix="/Source">
         <file>Source/Image/Wall_1.png</file>
-        <file>Source/Image/Ground_1.png</file>
-        <file>Source/Image/Ground_2.png</file>
-        <file>Source/Image/Ground_3.png</file>
-        <file>Source/Image/Ground_4.png</file>
         <file>Source/Image/Caractere/Link_1.png</file>
-        <file>Source/Image/Caractere/wizzard_m_idle_anim_f0.png</file>
-        <file>Source/Image/Caractere/wizzard_m_idle_anim_f1.png</file>
-        <file>Source/Image/Caractere/wizzard_m_idle_anim_f2.png</file>
-        <file>Source/Image/Caractere/wizzard_m_idle_anim_f3.png</file>
-        <file>Source/Image/Caractere/wizzard_m_idle_anim_f0_resize.png</file>
         <file>Source/Image/projectil/Projectil_1.png</file>
         <file>Source/Image/Weapon/weapon_red_magic_staff.png</file>
+        <file>Source/Image/Wall/Wall_Corner_Bottom_Left_1.png</file>
+        <file>Source/Image/Wall/Wall_Corner_Bottom_Right_1.png</file>
+        <file>Source/Image/Wall/Wall_Corner_Top_left_1.png</file>
+        <file>Source/Image/Wall/Wall_side_1.png</file>
+        <file>Source/Image/Wall/Wall_top_1.png</file>
+        <file>Source/Image/Wall/Wall_Corner_Top_Right.png</file>
+        <file>Source/Image/Ground/Ground_10.png</file>
+        <file>Source/Image/Ground/Ground_9.png</file>
+        <file>Source/Image/Ground/Ground_8.png</file>
+        <file>Source/Image/Ground/Ground_7.png</file>
+        <file>Source/Image/Ground/Ground_6.png</file>
+        <file>Source/Image/Ground/Ground_5.png</file>
+        <file>Source/Image/Ground/Ground_4.png</file>
+        <file>Source/Image/Ground/Ground_3.png</file>
+        <file>Source/Image/Ground/Ground_2.png</file>
+        <file>Source/Image/Ground/Ground_1.png</file>
+        <file>Source/Image/Caractere/Wizzard/wizzard_m_run_anim_f3.png</file>
+        <file>Source/Image/Caractere/Wizzard/wizzard_m_run_anim_f2.png</file>
+        <file>Source/Image/Caractere/Wizzard/wizzard_m_run_anim_f1.png</file>
+        <file>Source/Image/Caractere/Wizzard/wizzard_m_run_anim_f0.png</file>
+        <file>Source/Image/Caractere/Wizzard/wizzard_m_idle_anim_f3.png</file>
+        <file>Source/Image/Caractere/Wizzard/wizzard_m_idle_anim_f2.png</file>
+        <file>Source/Image/Caractere/Wizzard/wizzard_m_idle_anim_f1.png</file>
+        <file>Source/Image/Caractere/Wizzard/wizzard_m_idle_anim_f0.png</file>
+        <file>Source/Image/Caractere/Wizzard/wizzard_m_hit_anim_f0.png</file>
+        <file>Source/Image/Caractere/Necromancer/necromancer_run_anim_f3.png</file>
+        <file>Source/Image/Caractere/Necromancer/necromancer_run_anim_f2.png</file>
+        <file>Source/Image/Caractere/Necromancer/necromancer_run_anim_f1.png</file>
+        <file>Source/Image/Caractere/Necromancer/necromancer_run_anim_f0.png</file>
+        <file>Source/Image/Caractere/Necromancer/necromancer_idle_anim_f3.png</file>
+        <file>Source/Image/Caractere/Necromancer/necromancer_idle_anim_f2.png</file>
+        <file>Source/Image/Caractere/Necromancer/necromancer_idle_anim_f1.png</file>
+        <file>Source/Image/Caractere/Necromancer/necromancer_idle_anim_f0.png</file>
     </qresource>
 </RCC>

@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QTimer>
+
 #include <QGraphicsItem>
 
 #include "Game.h"
@@ -14,6 +15,7 @@ public:
 private:
     void updateBaseOnFps();
     double fps;
+    int indexFps;
 };
 
 #endif // UPDATE_H
