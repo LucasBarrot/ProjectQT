@@ -46,12 +46,20 @@ void EntityWeapon::set_rateOfFireSpecial(double argTime){
 void EntityWeapon::set_imgWeapon(QString argPath){
     //set image of the weapon
     img = QImage(argPath);
-    img = img.scaled(4, 10);
+    img = img.scaled(10, 4);
     setPixmap(QPixmap::fromImage(img));
 }
 
 QImage EntityWeapon::get_imgWeapon(){
     return img;
+}
+
+void EntityWeapon::set_pathImgWeapon(QString argPath){
+    pathImgWeapon = argPath;
+}
+
+QString EntityWeapon::get_pathImgWeapon(){
+    return pathImgWeapon;
 }
 
 void EntityWeapon::set_pathImgProjectil(QString argPath){
@@ -102,26 +110,8 @@ bool EntityWeapon::get_specialShootReady(){
     return specialShootReady;
 }
 
-QLineF EntityWeapon::get_lineRotationWeapon()
-{
-    return lineRotationWeapon;
-}
-
-void EntityWeapon::set_linePos(QPointF argPt1, QPointF argPt2){
-    lineRotationWeapon.setP1(argPt1);
-    lineRotationWeapon.setP2(argPt2);
-}
-
-void EntityWeapon::set_lineRotationWeapon(double argAngle){
-    lineRotationWeapon.setAngle(-argAngle);
-}
 
 void EntityWeapon::turnWeapon(bool invert)
 {
-    if (invert){
-        set_linePos(QPointF(-game->player->playerEntity->get_pointCoordOrgin() + posWeaponInvert + QPointF(img.width()/2, img.height()/2)), QPointF(-game->player->playerEntity->get_pointCoordOrgin() + posWeaponInvert));
-    }
-    else {
-        set_linePos(QPointF(-game->player->playerEntity->get_pointCoordOrgin() + posWeapon + QPointF(img.width()/2, img.height()/2)), QPointF(-game->player->playerEntity->get_pointCoordOrgin() + posWeapon));
-    }
+
 }

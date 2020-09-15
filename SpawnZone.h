@@ -4,6 +4,8 @@
 #include <QGraphicsRectItem>
 
 #include "Enemy.h"
+#include "Chest.h"
+
 
 class SpawnZone : public QGraphicsRectItem{
 public:
@@ -18,9 +20,13 @@ public:
     //void set_enemy in scene
     void set_enemyInScene();
 
-    //tab of all enemy in this gen
+    //tab of all enemy in this room of this gen
     QVector<Enemy*>  tabEnemy;
+
+    //chest in this room of this gen
+    Chest * chest;
 private:
+
     //rect that define the zone where object need to spawn
     QGraphicsRectItem * spawnZone;
 

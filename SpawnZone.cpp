@@ -1,6 +1,7 @@
 #include "SpawnZone.h"
 #include "Game.h"
 #include "Enemy.h"
+#include "Room.h"
 
 #include <QGraphicsScene>
 #include <QDebug>
@@ -22,18 +23,19 @@ void SpawnZone::spawn()
     if(type.compare("monsterRoom") == 0){
         spawnMonsterRoom();
     }
-    else if(type.compare("gift")){
-
+    else if(type.compare("giftRoom") == 0){
+        chest = new Chest();
+        chest->setParentItem(this);
+        chest->setPos(rect().width() / 2 - chest->boundingRect().width()/2 , rect().height()/2 - chest->boundingRect().height()/2);
     }
 }
 
-void SpawnZone::playerEnterSpawnZone()
-{
+void SpawnZone::playerEnterSpawnZone(){
     //change the status of all enemy in room
     if(type.compare("monsterRoom") == 0){
         for(int indexEnemy = 0; indexEnemy < tabEnemy.size(); ++indexEnemy){
             tabEnemy.at(indexEnemy)->set_ToAttackMode();
-        }
+        }        
     }
 }
 

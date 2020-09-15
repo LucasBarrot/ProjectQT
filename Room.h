@@ -22,6 +22,9 @@ class Room: public QGraphicsItemGroup{
     //udpate gate (remove wall to replace it by to small walls)
     void update_side_gate(int nSide, int xCoordPar, int yCoordPar);
 
+    //set close dore when player enter the room
+    void closeTheDoor();
+
     //set spawnZone
     void set_spawnZone(QPointF posSpawnZone);
 
@@ -34,11 +37,13 @@ class Room: public QGraphicsItemGroup{
     double get_width();
     std::string get_type();
 
+
     //group of all object in this room
     QGraphicsItemGroup * group;
 
     //spawn zone
     SpawnZone * spawnZone;
+
 private:
     //size room
     double heightRoom;

@@ -35,6 +35,7 @@ public:
     //set a collider to detect they are obstacle to shoot player
     QGraphicsRectItem * lineOfSight;
 
+
 private:
     //set a entity necromancer
     Entity * set_necromancer();
@@ -59,6 +60,7 @@ private:
     //prev position of enemy (if it touch a wall or object reset position)
     double prevXPos;
     double prevYPos;
+
 };
 
 #endif // ENEMY_H

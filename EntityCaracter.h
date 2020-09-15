@@ -19,8 +19,10 @@ public:
     double get_displacement();
 
     //health
-    void set_health(double argHealth);
-    double get_health();
+    void set_actualHealth(double argHealth);
+    double get_actualHealth();
+    void set_maxHealth(double argHealth);
+    double get_maxHealth();
 
     //set index sprite
     void set_indexSprite(int argIndexSprite);
@@ -46,6 +48,10 @@ public:
     void set_verifRotation(bool argVerif);
     bool get_verifRotation();
 
+    //invulnerability
+    void set_invulnerability(bool argInvulnerability);
+    bool get_invulnerability();
+
     // Sprite :
     //add Sprite
     void addSprite(std::string pathFile, int argStatus);
@@ -59,6 +65,7 @@ public:
     void chooseSprite();
     //update Sprite for each frame
     void updateSprite(QVector<QPixmap*> tabSprite);
+
 
     //Collider
     //collider size
@@ -84,7 +91,8 @@ private:
     double displacement;
 
     //health
-    double health;
+    double actualHealth;
+    double maxHealth;
 
     //Size of entity
     double widthEntity;
@@ -100,6 +108,11 @@ private:
 
     //verif the rotation of enemy
     bool verifRotation;
+
+    //invulnerability
+    //if true enemy can't die
+    //if false enemy can die
+    bool invulnerability;
 
     //status caracter
     // status = 0 : idle

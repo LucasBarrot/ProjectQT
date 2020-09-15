@@ -6,10 +6,8 @@
 
 extern Game * game;
 
-Weapon::Weapon(double argXOriginPlayer, double argYOriginPlayer){
-
-    entityWeapon = set_wizardStaff();
-
+Weapon::Weapon(EntityWeapon * argEntity){
+    entityWeapon = argEntity;
     setRect(0,0, entityWeapon->get_imgWeapon().width(), entityWeapon->get_imgWeapon().height());
     setTransformOriginPoint(entityWeapon->get_imgWeapon().width()/2, entityWeapon->get_imgWeapon().height()/2);
 
@@ -17,9 +15,13 @@ Weapon::Weapon(double argXOriginPlayer, double argYOriginPlayer){
     pointPosWeapon = QPointF(16-4, 10);
     setPos(pointPosWeapon);
 
-    entityWeapon->set_linePos(QPointF(-QPointF(argXOriginPlayer, argYOriginPlayer) + pointPosWeapon + QPointF(entityWeapon->get_imgWeapon().width()/2, entityWeapon->get_imgWeapon().height()/2)), QPointF(-QPointF(argXOriginPlayer, argYOriginPlayer) + pointPosWeapon));
+    test_ouputWeapon = new Collider(1,1);
+    test_ouputWeapon->setPos(entityWeapon->get_imgWeapon().width(), entityWeapon->get_imgWeapon().height()/2);
+    test_ouputWeapon->setParentItem(this);
 
-    setParent(NULL);
+    //setParent(NULL);
+
+    entityWeapon->setParentItem(this);
 }
 
 void Weapon::simpleShoot()
@@ -43,8 +45,11 @@ void Weapon::updateSpecialShoot(){
 
 //shoot simple and special
 void Weapon::shoot(double bulletAngleToAdd){
-    double xPos = game->player->pos().x() + entityWeapon->get_lineRotationWeapon().p2().x();
-    double yPos = game->player->pos().y() + entityWeapon->get_lineRotationWeapon().p2().y();
+    double xPos = test_ouputWeapon->scenePos().x();
+    double yPos = test_ouputWeapon->scenePos().y();
+
+
+    qDebug() <<  test_ouputWeapon->scenePos().x();
 
     Projectil * projectil = new Projectil(entityWeapon->get_angleWeapon() + bulletAngleToAdd, xPos, yPos, 15, entityWeapon->get_pathImgProjectil() /*modify when entity weapon done*/);
 
@@ -73,38 +78,7 @@ void Weapon::specialShoot(){
     }
 }
 
-EntityWeapon * Weapon::set_wizardStaff(){
-    EntityWeapon * tmpEntity = new EntityWeapon();
 
-    tmpEntity->setParentItem(this);
-
-    //set name weapon
-    tmpEntity->set_nameWeapon("Wizard_Staff");
-
-    //set damage per bullet of the weapon
-    tmpEntity->set_damage(15);
-
-    //set rate Of Fire simple shoot per second
-    tmpEntity->set_rateOfFire(2);
-
-    //set rate of fire special shoot in second
-    tmpEntity->set_rateOfFireSpecial(5);
-
-    //set img weapon
-    tmpEntity->set_imgWeapon(":/Source/Source/Image/Weapon/weapon_red_magic_staff.png");
-
-    //set img projectil shoot by weapon
-    tmpEntity->set_pathImgProjectil(":/Source/Source/Image/projectil/Projectil_1.png");
-
-    //angle aiming (obsolete)
-    tmpEntity->set_angleWeapon(0);
-
-    //set pos weapon
-    tmpEntity->set_posWeapon(QPointF(12,10));
-    tmpEntity->set_posWeaponInvert(QPointF(0, 10));
-
-    return tmpEntity;
-}
 
 
 

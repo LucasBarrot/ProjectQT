@@ -1,8 +1,8 @@
 #include "Game.h"
 
+#include "ListWeapon.h"
 
 #include <QDebug>
-
 
 Game::Game(QWidget * parent){
     //set fps
@@ -12,7 +12,6 @@ Game::Game(QWidget * parent){
 
     //Create scene
     scene = new QGraphicsScene();
-
     //setSceneRect(scene->sceneRect());
     setBackgroundBrush(QBrush(QColor(Qt::black)));
 
@@ -26,6 +25,13 @@ Game::Game(QWidget * parent){
         world->tabRoom.at(indexRoom)->set_spawnZone(QPointF(world->tabRoom.at(indexRoom)->x(), world->tabRoom.at(indexRoom)->y()));
     }
 
+    //set List Weapon
+    listWeapon = new ListWeapon();
+
+    //add Inventory
+    inventory = new Inventory();
+    inventory->addFirstWeapon(listWeapon->get_constructeur(0));
+
     //add player
     player = new Player(fps);
     // make the player focusable and set it to be the current focus
@@ -36,6 +42,9 @@ Game::Game(QWidget * parent){
     // add the player to the scene
     scene->addItem(player);
     player->set_objectOfPlayerInScene();
+
+    //add weapon, after creation player and inventory
+    player->addWeapon(inventory->get_Weapon_1());
 
     //add weapon (test)
     scene->addItem(player->weapon);
@@ -55,40 +64,43 @@ Game::Game(QWidget * parent){
 
     //Minimum size of the screen
     setMinimumSize(1000,800);
+    widthScreen = 1000;
+    heightScreen = 800;
 
     //disable scroll bar
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-
-    ui = new UI();
-
+    ui = new UI(widthScreen*0.2/3, heightScreen/3);
     scene->addItem(ui);
 
-    ui->printOnScreen();
 
     //define scene
     setScene(scene);
     setSceneRect(scene->sceneRect());
 
+    show();
 
     //add update
     Update * update = new Update(fps);
 
-    show();
+
 }
 
 void Game::mouseMoveEvent(QMouseEvent *event)
 {
     //line to get angle from player
-    QPointF pt1(width()/2, height()/2);
+    QPointF pt1(mapFromScene(QPoint(player->x() + player->rect().width()/2,
+                                    player->y() + player->rect().height()/2 )));
     QPointF pt2(event->pos());
     QLineF line(pt1,pt2);
     double asbAngle = abs(-1 * line.angle());
     double angle = -1 * line.angle();
     //line to get angle from weapon
-    QPointF pt1Weapon(mapFromScene(QPoint(player->x() + player->rect().width()/2 + player->weapon->entityWeapon->get_lineRotationWeapon().p2().x(),
-                                          player->y() + player->rect().height()/2 + player->weapon->entityWeapon->get_lineRotationWeapon().p2().y())));
+    QPointF pt1Weapon(mapFromScene(QPoint(player->weapon->test_ouputWeapon->scenePos().x(),
+                                          player->weapon->test_ouputWeapon->scenePos().y())));
+
+    //    qDebug() << player->x() + player->weapon->entityWeapon->get_lineRotationWeapon().p2().x() << player->y() + player->weapon->entityWeapon->get_lineRotationWeapon().p2().y();
     QPointF pt2Weapon(event->pos());
     QLineF lineAngleWeapon(pt1Weapon,pt2Weapon);
     double angleWeapon = -1 * lineAngleWeapon.angle();
@@ -96,7 +108,7 @@ void Game::mouseMoveEvent(QMouseEvent *event)
     if(90 < asbAngle && asbAngle < 270 && player->playerEntity->get_verifRotation() == false){
         player->playerEntity->setPixmap(player->playerEntity->get_currentSprite().transformed(QTransform().scale(-1,1)));
         player->playerEntity->set_verifRotation(true);
-        player->weapon->setPos(0,10);
+        player->weapon->setPos(player->weapon->entityWeapon->get_posWeaponInvert());
         player->weapon->entityWeapon->turnWeapon(true);
         orientationWeapon = -180 - 60;
 
@@ -104,17 +116,25 @@ void Game::mouseMoveEvent(QMouseEvent *event)
     else if((asbAngle < 90 || 270 < asbAngle) && player->playerEntity->get_verifRotation() == true){
         player->playerEntity->setPixmap(player->playerEntity->get_currentSprite());
         player->playerEntity->set_verifRotation(false);
-        player->weapon->setPos(16-4,10);
+        player->weapon->setPos(player->weapon->entityWeapon->get_posWeapon());
         player->weapon->entityWeapon->turnWeapon(false);
         orientationWeapon = 60;
     }
 
-    player->weapon->setRotation(angle + orientationWeapon);
-    player->weapon->entityWeapon->set_lineRotationWeapon(angle);
+    player->weapon->setRotation(angle);
     player->weapon->entityWeapon->set_angleWeapon(angleWeapon);
 }
 
 void Game::resizeEvent(QResizeEvent *event){
+    //
+    heightScreen = height();
+    widthScreen = width();
+    ui->setRect(0,0, widthScreen * 0.2 / 3, heightScreen/3);
+    qDebug() << widthScreen << heightScreen;
+    qDebug() << ui->rect().width() << ui->rect().height();
+    //resize object in UI
+    ui->resize();
+
     //resize the scene rect, set the view's scene rect to this new scene rect
     scene->setSceneRect(scene->itemsBoundingRect().x() - width()/4, scene->itemsBoundingRect().y() - height()/4,scene->itemsBoundingRect().size().rwidth() + width()/2, scene->itemsBoundingRect().size().rheight() + height()/2);
     setSceneRect(scene->sceneRect());
@@ -158,3 +178,4 @@ bool Game::get_verifRotationCaracter()
 {
     return verifRotationCaractere;
 }
+

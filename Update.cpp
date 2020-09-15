@@ -10,15 +10,29 @@ Update::Update(double argFps)
     //set fps
     fps = argFps;
 
+    //keep track of the number of fps per second
+    indexFps = 0;
+
+    //set first frame
+    firstFrame = true;
+
     //set connect with a timer base on fps
     QTimer *timer = new QTimer();
     connect(timer,&QTimer::timeout,this,&Update::updateBaseOnFps);
     timer->start( 1000/fps);
-    indexFps = 0;
+
+
+
 }
 
-void Update::updateBaseOnFps()
-{
+void Update::updateBaseOnFps(){
+
+    if(firstFrame == true){
+        firstFrame = false;
+
+        game->ui->printOnScreen();
+    }
+
     //move player
     game->player->moving();
 
@@ -45,7 +59,11 @@ void Update::updateBaseOnFps()
     }
 
     //center view on player
-    game->centerOn(game->player->x() + game->player->rect().width()/2, game->player->y() + game->player->rect().height()/2);
+    game->centerOn(game->player->x() + game->player->rect().width()/2 + ((game->width()*0.2)/3)/2, game->player->y() + game->player->rect().height()/2);
+
+
+    //update pos Ui
+    game->ui->setPos(game->mapToScene(game->width()*0.8, 0));
 
     //increase index fps
     indexFps++;

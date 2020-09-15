@@ -20,12 +20,14 @@ Projectil::Projectil(double argAngle, double argXPos, double argYPos, double arg
     setPixmap(QPixmap::fromImage(img));
     setTransformOriginPoint(img.width()/2, img.height()/2);
 
-    //set the first pos of the bullet
-    setPos(argXPos, argYPos);
+    //add to position size of projectil
+    // and set the value that keep track of the position
+    xPosProjectil = argXPos - img.width()/2;
+    yPosProjectil = argYPos - img.height()/2;
 
-    //keep that position
-    xPosProjectil = argXPos;
-    yPosProjectil = argYPos;
+
+    //set the first pos of the bullet
+    setPos(xPosProjectil, yPosProjectil);
 
     timer = new QTimer;
 }
@@ -86,9 +88,9 @@ void Projectil::updatePositionOnScreen(int argIndexProjectil)
         //if we shoot enemy (from player)
         if(nameClassCaracterToHit == typeid (Enemy).name()){
             Enemy * enemy = dynamic_cast<Enemy*>(colliding_items.at(indexColliderStop));
-            if(game->player->get_playerIsInRoom() == enemy->parentItem()){
-                if(enemy->enemyEntity->get_health() - damage > 0){
-                    enemy->enemyEntity->set_health(enemy->enemyEntity->get_health() - damage);
+            if(enemy->enemyEntity->get_invulnerability() == false){
+                if(enemy->enemyEntity->get_actualHealth() - damage > 0){
+                    enemy->enemyEntity->set_actualHealth(enemy->enemyEntity->get_actualHealth() - damage);
 
                     //remove bullet
                     game->tabProjectil.remove(argIndexProjectil);
@@ -103,7 +105,8 @@ void Projectil::updatePositionOnScreen(int argIndexProjectil)
                     delete this;
 
                     //for a qvector we don't remove it from the scene (if we do it, it going to crash, allocating problem with pointer)
-                        delete game->player->get_playerIsInRoom()->tabEnemy.takeAt(game->player->get_playerIsInRoom()->tabEnemy.indexOf(enemy));
+                    SpawnZone * spawnZoneEnemy = dynamic_cast<SpawnZone*>(enemy->parentItem());
+                    delete spawnZoneEnemy->tabEnemy.takeAt(spawnZoneEnemy->tabEnemy.indexOf(enemy));
                 }
             }
         }

@@ -31,8 +31,8 @@ public:
     //set the angle of player
     void set_angle(double angle);
 
-    //player is in room
-    SpawnZone * get_playerIsInRoom();
+    //health change
+    void healthPlayerChange(double health);
 
     //return angle of player
     double get_angle();
@@ -46,8 +46,14 @@ public:
     //verif rotation sprite (test)
     bool verifMirroredSprite = false;
 
+    //player press space and do an action
+    void action();
+
     //Weapon (test)
     Weapon * weapon;
+    void addWeapon(EntityWeapon * argEntity);
+
+
 signals:
     /// Emitted when a key is pressed.
     /// @param key Integer describing the key that was pressed. Compare with constants in Qt::key_.

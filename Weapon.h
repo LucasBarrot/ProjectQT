@@ -7,11 +7,13 @@
 #include <QMouseEvent>
 
 #include "EntityWeapon.h"
+#include "Collider.h"
+
 
 class Weapon: public QObject, public QGraphicsRectItem{
     Q_OBJECT;
 public:
-    Weapon(double argXOriginPlayer, double argYOriginPlayer);
+    Weapon(EntityWeapon * argEntity);
     //click left button
     void simpleShoot();
     //click right button
@@ -19,12 +21,13 @@ public:
 
     EntityWeapon * entityWeapon;
 
+    Collider * test_ouputWeapon;
+
+    //update pixmap after changing weapon
+    void updatePixmap();
+
 
 private:
-
-    //set wizard staff
-    EntityWeapon * set_wizardStaff();
-
 
     void continuToSimpleShoot();
 

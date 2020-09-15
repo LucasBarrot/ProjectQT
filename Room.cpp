@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <QDebug>
 
 
 Room::Room(double argHeightWall, double argHeightBridge){
@@ -131,7 +132,7 @@ void Room::update_side_gate(int nSide, int xCoordPar, int yCoordPar){
 
 void Room::set_spawnZone(QPointF posSpawnZone){
     //SpawnZone
-    spawnZone = new SpawnZone(0,0, widthRoom - 2 * sizeCorner, heightRoom - 2 * sizeCorner, type);
+    spawnZone = new SpawnZone(0, 0, widthRoom - 2 * sizeCorner, heightRoom - 2 * sizeCorner, type);
     //spawnZone->setParentItem(this);
     spawnZone->setPos(posSpawnZone + QPointF(sizeCorner, sizeCorner));
     scene()->addItem(spawnZone);
@@ -217,8 +218,7 @@ void Room::createGround(int xSize, int ySize){
     }
 }
 
-void Room::setGate(int nSide, int xSize, int ySize, int xCoord, int yCoord, bool update)
-{
+void Room::setGate(int nSide, int xSize, int ySize, int xCoord, int yCoord, bool update){
     Wall * gate_1;
     Wall * gate_2;
     int xSizeGate = (xSize - heightBridge)/2 + sizeWallHeight - sizeCorner;

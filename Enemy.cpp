@@ -100,6 +100,9 @@ void Enemy::set_prevPos(QPointF argPrevPos){
 void Enemy::set_ToAttackMode(){
     //set entity to attack mode
     enemyEntity->set_status(1);
+
+    //disable invulnerability
+    enemyEntity->set_invulnerability(false);
 }
 
 void Enemy::set_objectOfEnemyInScene(){
@@ -110,6 +113,9 @@ void Enemy::set_objectOfEnemyInScene(){
     enemyEntity->colliderLeft->setParentItem(this);
     enemyEntity->colliderRight->setParentItem(this);
 }
+
+
+
 
 Entity *Enemy::set_necromancer(){
     //create a new temporary entity
@@ -125,7 +131,8 @@ Entity *Enemy::set_necromancer(){
     entity->set_displacement(0, 0);
 
     //set health
-    entity->set_health(25);
+    entity->set_maxHealth(25);
+    entity->set_actualHealth(entity->get_maxHealth());
 
     //set status (test)
     entity->set_status(0);
@@ -138,6 +145,9 @@ Entity *Enemy::set_necromancer(){
 
     //define parent
     entity->setParentItem(this);
+
+    //set invulnerability to true
+    entity->set_invulnerability(true);
 
     //set Sprite entity
     //Sprite idle

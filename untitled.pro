@@ -18,6 +18,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     Bridge.cpp \
+    Chest.cpp \
     Collider.cpp \
     Enemy.cpp \
     EntityCaracter.cpp \
@@ -25,18 +26,25 @@ SOURCES += \
     Game.cpp \
     Generation_World.cpp \
     Ground.cpp \
+    Heart.cpp \
+    Inventory.cpp \
+    ListWeapon.cpp \
+    Minimap.cpp \
     Player.cpp \
     Projectil.cpp \
     Room.cpp \
+    SlotWeaponUI.cpp \
     SpawnZone.cpp \
     UI.cpp \
     Update.cpp \
     Wall.cpp \
     Weapon.cpp \
+    WeaponOnGround.cpp \
     main.cpp
 
 HEADERS += \
     Bridge.h \
+    Chest.h \
     Collider.h \
     Enemy.h \
     EntityCaracter.h \
@@ -44,14 +52,20 @@ HEADERS += \
     Game.h \
     Generation_World.h \
     Ground.h \
+    Heart.h \
+    Inventory.h \
+    ListWeapon.h \
+    Minimap.h \
     Player.h \
     Projectil.h \
     Room.h \
+    SlotWeaponUI.h \
     SpawnZone.h \
     UI.h \
     Update.h \
     Wall.h \
-    Weapon.h
+    Weapon.h \
+    WeaponOnGround.h
 
 FORMS += \
     mainwindow.ui

@@ -10,6 +10,9 @@
 #include "Update.h"
 #include "Projectil.h"
 #include "UI.h"
+#include "Inventory.h"
+#include "ListWeapon.h"
+
 
 class Game: public QGraphicsView{
 public:
@@ -27,6 +30,8 @@ public:
     Generation_World * world;
     Player * player;
     UI * ui;
+    Inventory * inventory;
+    ListWeapon * listWeapon;
 
     QVector<Projectil*> tabProjectil;
 
@@ -34,11 +39,18 @@ public:
 
     double fps;
 
+    //height and width screen
+    double heightScreen;
+    double widthScreen;
+
 private:
     double orientationWeapon;
     bool verifRotationCaractere = true;
 
     bool verifLeftClick;
+
+    //set first weapon
+    void addFirstWeaponToInventory();
 };
 
 #endif // GAME_H

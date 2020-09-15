@@ -37,5 +37,12 @@
         <file>Source/Image/Caractere/Necromancer/necromancer_idle_anim_f2.png</file>
         <file>Source/Image/Caractere/Necromancer/necromancer_idle_anim_f1.png</file>
         <file>Source/Image/Caractere/Necromancer/necromancer_idle_anim_f0.png</file>
+        <file>Source/Image/Heart/ui_heart_half.png</file>
+        <file>Source/Image/Heart/ui_heart_full.png</file>
+        <file>Source/Image/Heart/ui_heart_empty.png</file>
+        <file>Source/Image/Chest/chest_full_open_anim_f2.png</file>
+        <file>Source/Image/Chest/chest_full_open_anim_f0.png</file>
+        <file>Source/Image/projectil/Projectil_Bazooka.png</file>
+        <file>Source/Image/Weapon/Bazooka.png</file>
     </qresource>
 </RCC>

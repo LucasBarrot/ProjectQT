@@ -18,40 +18,46 @@ Player::Player(double fps){
 
     //set player
     playerEntity = set_entityPlayer(fps);
-
-
-
-    //add weapon
-     weapon = new Weapon(playerEntity->get_xCoordOrigin(), playerEntity->get_yCoordOrigin());
-
-     weapon->setParentItem(this);
 }
 
-void Player::keyPressEvent(QKeyEvent *event)
-{
+void Player::keyPressEvent(QKeyEvent *event){
+
     if (!event->isAutoRepeat()){
-        keysPressed_.insert(event->key());
+        if((event->key() == Qt::Key_Q || event->key() == Qt::Key_Z || event->key() == Qt::Key_D || event->key() == Qt::Key_S)){
+            keysPressed_.insert(event->key());
+            qDebug() << event->key() << keysPressed_.size();
+
+            if(keysPressed_.size() != 0 && verifFirstKeyMOuvement == true){
+
+                verifFirstKeyMOuvement = false;
+                playerEntity->set_status(1);
+                playerEntity->changeSprite();
+            }
+        }
+        else if (event->key() == Qt::Key_Space){
+            action();
+        }
+
     }
 
-    if(keysPressed_.size() != 0 && verifFirstKeyMOuvement == true){
-        verifFirstKeyMOuvement = false;
-        playerEntity->set_status(1);
-        playerEntity->changeSprite();
-    }
+
 }
 
-void Player::keyReleaseEvent(QKeyEvent *event)
-{
+void Player::keyReleaseEvent(QKeyEvent *event){
+
+
+
     if (!event->isAutoRepeat()){
-        keysPressed_.erase(event->key());
-    }
+        if((event->key() == Qt::Key_Q || event->key() == Qt::Key_Z || event->key() == Qt::Key_D || event->key() == Qt::Key_S)){
+            keysPressed_.erase(event->key());
 
-    if(keysPressed_.size() == 0){
-        playerEntity->set_status(0);
-        verifFirstKeyMOuvement = true;
-        playerEntity->changeSprite();
+            if(keysPressed_.size() == 0 && (event->key() == Qt::Key_Q || event->key() == Qt::Key_Z || event->key() == Qt::Key_D || event->key() == Qt::Key_S)){
+                playerEntity->set_status(0);
+                verifFirstKeyMOuvement = true;
+                playerEntity->changeSprite();
+            }
+        }
     }
-
 }
 
 QPointF Player::getOriginMapToScene(){
@@ -63,9 +69,16 @@ void Player::set_angle(double argAngle)
     angle = argAngle;
 }
 
-SpawnZone *Player::get_playerIsInRoom()
-{
-    return playerIsInRoom;
+void Player::healthPlayerChange(double argHealth){
+    //change health in entity
+    playerEntity->set_actualHealth(argHealth);
+
+    if(playerEntity->get_actualHealth() > playerEntity->get_maxHealth()){
+        playerEntity->set_maxHealth(playerEntity->get_actualHealth());
+    }
+
+    //change health in UI
+
 }
 
 double Player::get_angle()
@@ -75,7 +88,7 @@ double Player::get_angle()
 
 void Player::set_objectOfPlayerInScene(){
     setRect(0,0, playerEntity->get_widthEntity(), playerEntity->get_heightEntity());
-    setPen(Qt::NoPen);
+    //setPen(Qt::NoPen);
     scene()->addItem(playerEntity);
     scene()->addItem(playerEntity->colliderBottom);
     scene()->addItem(playerEntity->colliderTop);
@@ -83,7 +96,38 @@ void Player::set_objectOfPlayerInScene(){
     scene()->addItem(playerEntity->colliderRight);
 }
 
+void Player::action(){
+    //define list of QGraphics Item that contain every colliding items
+    QList<QGraphicsItem *> colliding_items = this->collidingItems();
 
+    bool verifChest = false;
+    int indexColliderStop;
+
+    //check every colliding items if it is a chest
+    for (int indexCollider = 0, n = colliding_items.size(); indexCollider < n; ++indexCollider){
+         if(typeid (*(colliding_items[indexCollider])).name() == typeid(Chest).name()){
+             verifChest = true;
+             indexColliderStop = indexCollider;
+             break;
+         }
+    }
+
+    //if player collide with a chest and space is pressed, open the chest
+    if(verifChest){
+        Chest * chestTouchByPlayer = dynamic_cast<Chest*>(colliding_items.at(indexColliderStop));
+        chestTouchByPlayer->openChest();
+    }
+}
+
+//add weapon to player from inventory
+void Player::addWeapon(EntityWeapon * argEntity){
+    //add weapon
+     weapon = new Weapon(argEntity);
+
+     weapon->setParentItem(this);
+}
+
+//define entity player
 Entity * Player::set_entityPlayer(int fps)
 {
     Entity * entity = new Entity();
@@ -99,6 +143,10 @@ Entity * Player::set_entityPlayer(int fps)
 
     //set status (test)
     entity->set_status(0);
+
+    //set healtyh
+    entity->set_maxHealth(100);
+    entity->set_actualHealth(entity->get_actualHealth());
 
     //set index sprite
     entity->set_indexSprite(0);
@@ -140,6 +188,8 @@ Entity * Player::set_entityPlayer(int fps)
     entity->colliderRight = new Collider(entity->get_widthCollider(), entity->get_heightCollider());
     entity->colliderRight->setPos(pos().x() +  entity->get_widthEntity()  - entity->get_widthCollider(), pos().y() + entity->get_heightEntity()/2 - entity->get_heightCollider()/2);
 
+    entity->setTransformOriginPoint(0,0);
+
     return entity;
 }
 
@@ -174,10 +224,8 @@ void Player::moving()
             QList<QGraphicsItem *> colliding_items_Left = playerEntity->colliderLeft->collidingItems();
             QList<QGraphicsItem *> colliding_items_Right = playerEntity->colliderRight->collidingItems();
 
-           QString name = typeid(Wall).name();
-
-            verifLeft = playerEntity->colliderVerif(colliding_items_Left, typeid(Wall).name(), typeid (Enemy).name());
-            verifRight = playerEntity->colliderVerif(colliding_items_Right, typeid(Wall).name(), typeid (Enemy).name());
+            verifLeft = playerEntity->colliderVerif(colliding_items_Left, typeid(Wall).name(), typeid (Enemy).name(), typeid (Chest).name());
+            verifRight = playerEntity->colliderVerif(colliding_items_Right, typeid(Wall).name(), typeid (Enemy).name(), typeid (Chest).name());
         }
         if(!(zPressed && sPressed) && (zPressed || sPressed)){
             if (zPressed){
@@ -197,8 +245,8 @@ void Player::moving()
             QList<QGraphicsItem *> colliding_items_Bottom = playerEntity->colliderBottom->collidingItems();
             QList<QGraphicsItem *> colliding_items_Top = playerEntity->colliderTop->collidingItems();
 
-            verifBottom = playerEntity->colliderVerif(colliding_items_Bottom, typeid (Wall).name(), typeid (Enemy).name());
-            verifTop = playerEntity->colliderVerif(colliding_items_Top, typeid(Wall).name(), typeid (Enemy).name());
+            verifBottom = playerEntity->colliderVerif(colliding_items_Bottom, typeid (Wall).name(), typeid (Enemy).name(), typeid (Chest).name());
+            verifTop = playerEntity->colliderVerif(colliding_items_Top, typeid(Wall).name(), typeid (Enemy).name(), typeid (Chest).name());
         }
 
         if(keysPressed_.size() == 1){
@@ -281,7 +329,6 @@ void Player::verifPlayerInRoom()
         playerIsInRoom = dynamic_cast<SpawnZone*>(collidingItemsPlayer.at(indexColliderStop));
 
         playerIsInRoom->playerEnterSpawnZone();
-
     }
 
 }
@@ -301,7 +348,7 @@ void Player::moveCloseToWall(int xSign, int ySign, Collider * collider)
 
         QList<QGraphicsItem *> colliding_items= collider->collidingItems();
 
-        bool verif =  playerEntity->colliderVerif(colliding_items, typeid (Wall).name(), typeid (Enemy).name());
+        bool verif =  playerEntity->colliderVerif(colliding_items, typeid (Wall).name(), typeid (Enemy).name(), typeid (Chest).name());
 
         if(verif){
             break;

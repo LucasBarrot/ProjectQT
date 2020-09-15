@@ -16,6 +16,8 @@ private:
     void updateBaseOnFps();
     double fps;
     int indexFps;
+    //verif if it is the first frame
+    bool firstFrame;
 };
 
 #endif // UPDATE_H

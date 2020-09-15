@@ -8,7 +8,8 @@ Entity::Entity(){
     //default value
     entityIsPlayer = false;
     displacement = 0;
-    health = 0;
+    actualHealth = 0;
+    maxHealth = 0;
     widthEntity = 0;
     heightEntity = 0;
     xCoordOrigin = 0;
@@ -44,13 +45,22 @@ double Entity::get_displacement(){
     return displacement;
 }
 
-void Entity::set_health(double argHealth){
-    health = argHealth;
+void Entity::set_actualHealth(double argHealth){
+    actualHealth = argHealth;
 }
 
-double Entity::get_health()
+double Entity::get_actualHealth()
 {
-    return health;
+    return actualHealth;
+}
+
+void Entity::set_maxHealth(double argHealth){
+    maxHealth = argHealth;
+}
+
+double Entity::get_maxHealth()
+{
+    return maxHealth;
 }
 
 void Entity::set_indexSprite(int argIndexSprite){
@@ -108,6 +118,15 @@ bool Entity::get_verifRotation(){
     return verifRotation;
 }
 
+void Entity::set_invulnerability(bool argInvulnerability){
+    invulnerability = argInvulnerability;
+}
+
+bool Entity::get_invulnerability(){
+    return invulnerability;
+}
+
+//sprite
 void Entity::addSprite(std::string pathFile, int argStatus){
     QPixmap * pixmap = new QPixmap();
     pixmap->load(QString::fromStdString(pathFile));
@@ -173,6 +192,8 @@ void Entity::updateSprite(QVector<QPixmap*> tabSprite)
     }
 }
 
+
+//collider
 void Entity::set_colliderSize(double argWidth, double argHeight){
     widthCollider = argWidth;
     heightCollider = argHeight;

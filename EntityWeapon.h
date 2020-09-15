@@ -31,6 +31,10 @@ public:
     QImage get_imgWeapon();
 
     //path image Projectil
+    void set_pathImgWeapon(QString argPath);
+    QString get_pathImgWeapon();
+
+    //path image Projectil
     void set_pathImgProjectil(QString argPath);
     QString get_pathImgProjectil();
 
@@ -53,11 +57,6 @@ public:
     bool get_specialShootReady();
     bool get_simpleShootReady();
 
-    //line of rotation for the weapon
-    QLineF get_lineRotationWeapon();
-    void set_linePos(QPointF argPt1, QPointF argPt2);
-    void set_lineRotationWeapon(double argAngle);
-
     //invert weapon
     void turnWeapon(bool invert);
 
@@ -73,6 +72,8 @@ private:
     double rateOfFireSpecial;
     //Image Weapon
     QImage img;
+    //path img Weapon
+    QString pathImgWeapon;
     //path img projectil shoot by weapon
     QString pathImgrojectil;
     //aiming angle
@@ -86,9 +87,6 @@ private:
     bool specialShootReady;
     //verif simple shoot
     bool simpleShootReady;
-
-    //Line to know where to shoot with the rotation
-    QLineF lineRotationWeapon;
 };
 
 #endif // ENTITYWEAPON_H
