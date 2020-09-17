@@ -14,6 +14,7 @@ public:
     void add_room_to_memory(Room * room);
     void connect(Room *room);
     bool intersect(QPolygonF);
+    QPolygonF build_hallway(QPointF point1, QPointF point2, int enter_side);
 private:
     QPolygonF network;
     QList<Room *> rooms_in_net; //contient les chambre avec leurs coordonnées

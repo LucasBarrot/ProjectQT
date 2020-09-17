@@ -42,6 +42,21 @@ QPointF Room::middle_right_point(){
 
 }
 
+int Room::which_enter(QPointF point)
+{
+    if (middle_top_point() == point)
+        return 0;
+
+    else if (middle_left_point() == point)
+        return 1;
+
+    else if (middle_bottom_point() == point)
+        return 2;
+
+    else if (middle_right_point() == point)
+        return 3;
+}
+
 void Room::block_enter_side(QPointF point_side){
     if(enter_side[0]==0){
         if (point_side == middle_top_point())

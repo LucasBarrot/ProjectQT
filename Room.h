@@ -13,6 +13,7 @@ public:
     QPointF middle_left_point();
     QPointF middle_bottom_point();
     QPointF middle_right_point();
+    int which_enter(QPointF point);
     int * get_enter_sides();
     void block_enter_side(QPointF point_side);
     QPolygonF get_room();
@@ -23,6 +24,8 @@ private:
     float height;
     float width;
     int enter_side[4] = {0,0,0,0};
+
+
 };
 
 #endif // ROOM_H

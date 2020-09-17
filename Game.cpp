@@ -51,7 +51,7 @@ Game::Game(QWidget *parent){
     }
 
 
-
+    //scene->addPolygon(net->tunnel_complet);
     scene->addItem(net);
 
 

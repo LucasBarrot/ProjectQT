@@ -1,4 +1,4 @@
-#include "Network.h"
+﻿#include "Network.h"
 #include "math.h"
 #include "Room.h"
 #include <QPointF>
@@ -51,30 +51,21 @@ Network::Network(Room * room1, Room * room2) : QObject(), QGraphicsPolygonItem()
             }
         }
     }
+    int enter_side = room1->which_enter(tunnel_point1);
     room1->block_enter_side(tunnel_point1);  // enregistre les entrées bloquées
     room2->block_enter_side(tunnel_point2);
 
     add_room_to_memory(room1); // enregistre les chambres déjà utilisé
     add_room_to_memory(room2);
 
-    QLineF line = QLineF(tunnel_point1, tunnel_point2);
+    QPolygonF tunnel_complete = build_hallway(tunnel_point1, tunnel_point2, enter_side);
 
-    QTransform t = QTransform().translate(center.x(),center.y()).rotate(-line.angle()-90).translate(-center.x(),-center.y());
-    QRectF tun(tunnel_point1.x(),tunnel_point1.y(),50,d_prev+20);
 
-    tun.moveCenter(center);
-
-    QPolygonF tunnel(tun);
-
-    tunnel = t.map(tunnel);
-
-    network = tunnel.united(room1->get_room());
+    network = tunnel_complete.united(room1->get_room());
     network = network.united(room2->get_room());
 
 
     setPolygon(network);
-
-
 }
 
 
@@ -106,7 +97,7 @@ void Network::connect(Room * new_room){
             entries_room.append(room->middle_bottom_point());
         if (enter_sides[3]==0)
            entries_room.append(room->middle_right_point());
-
+        //récupère les coordonnées d'entré de chaque chambre du réseau
         network_points.push_back(entries_room);
      }
 
@@ -126,6 +117,8 @@ void Network::connect(Room * new_room){
 
 
     QPointF tunnel_point1, tunnel_point2 ;
+    int room_number = 0;
+    int my_room_number;
     double d_prev = sqrt(pow((network_points[0][0].x()-new_room_points[0].x()),2) + pow((network_points[0][0].y()-new_room_points[0].y()),2));
     for (QList<QPointF> list_point1 : network_points)
     {
@@ -139,12 +132,16 @@ void Network::connect(Room * new_room){
                      tunnel_point1 = point1; // point1 du tunnel partant de la salle appartenant au réseau
                      tunnel_point2 = point2; // point2 du tunnel partant de la new room
                      d_prev = d;
+                     my_room_number = room_number;
 
                  }
              }
          }
+         room_number++;
      }
-    QPointF center = QPointF((tunnel_point1.x()+tunnel_point2.x())/2, (tunnel_point1.y()+tunnel_point2.y())/2);
+
+    int enter_side = rooms_in_net[my_room_number]->which_enter(tunnel_point1);
+
 
     for (Room * room : rooms_in_net){ //TODO: mettre une condition dans cette boucle pour ne pas se parcourir tout le réseau
         // parcours les salles du réseau pour bloqué l'entréesélectionnée
@@ -154,29 +151,83 @@ void Network::connect(Room * new_room){
 
     add_room_to_memory(new_room); // enregistre la nouvelle chambre dans le réseau
 
-    QLineF line = QLineF(tunnel_point1, tunnel_point2);
 
-    QTransform t = QTransform().translate(center.x(),center.y()).rotate(-line.angle()-90).translate(-center.x(),-center.y());
-    QRectF tun(tunnel_point1.x(),tunnel_point1.y(),50,d_prev+20);
-    tun.moveCenter(center);
+    QPolygonF tunnel_complete = build_hallway(tunnel_point1, tunnel_point2, enter_side);
 
-    QPolygonF tunnel(tun);
-
-    tunnel = t.map(tunnel);
-
-
-    network = network.united(tunnel);
+    network = network.united(tunnel_complete);
     network = network.united(new_room->get_room());
 
     setPolygon(network);
 
 }
 
+
+
 bool Network::intersect(QPolygonF room){
  if ( network.intersects(room) )
      return true;
  else
      return false;
+}
+
+QPolygonF Network::build_hallway(QPointF tunnel_point1, QPointF tunnel_point2, int enter_side)
+{
+    QRectF tun1, tun2;
+
+    if(enter_side == 0 ){
+        QPointF join_point(tunnel_point1.x(),tunnel_point2.y());
+        tun1 = QRectF( QPointF(join_point.x()-10,join_point.y()), QPointF(tunnel_point1.x()+10,tunnel_point1.y()) );
+        // si le point est à gauche
+        if (tunnel_point2.x() < tunnel_point1.x() and tunnel_point2.y() < tunnel_point1.y() )
+            tun2 = QRectF( QPointF(tunnel_point2.x(),tunnel_point2.y()-10), QPointF(join_point.x(),join_point.y()+10) );
+
+        // si le point est à droite
+        else if (tunnel_point2.x() > tunnel_point1.x() and tunnel_point2.y() < tunnel_point1.y() )
+            tun2 = QRectF( QPointF(join_point.x(),join_point.y()+10), QPointF(tunnel_point2.x(),tunnel_point2.y()-10) );
+     }
+
+    //entrée de gauche
+    if(enter_side == 1 ){
+        QPointF join_point(tunnel_point2.x(),tunnel_point1.y());
+        tun1 = QRectF( QPointF(join_point.x(),join_point.y()-10), QPointF(tunnel_point1.x(),tunnel_point1.y()+10) );
+        // si le point est en haut
+        if (tunnel_point2.x() < tunnel_point1.x() and tunnel_point2.y() < tunnel_point1.y() )
+            tun2 = QRectF( QPointF(tunnel_point2.x()-10,tunnel_point2.y()), QPointF(join_point.x()+10,join_point.y()) );
+
+        // si le point est en bas
+        else if (tunnel_point2.x() < tunnel_point1.x() and tunnel_point2.y() > tunnel_point1.y() )
+            tun2 = QRectF( QPointF(join_point.x()-10,join_point.y()), QPointF(tunnel_point2.x()+10,tunnel_point2.y()) );
+
+     }
+    //entrée du bas
+    if(enter_side == 2 ){
+        QPointF join_point(tunnel_point1.x(),tunnel_point2.y());
+        tun1 = QRectF( QPointF(tunnel_point1.x()-10,tunnel_point1.y()), QPointF(join_point.x()+10,join_point.y()) );
+        // si le point est à gauche
+        if (tunnel_point2.x() < tunnel_point1.x() and tunnel_point2.y() > tunnel_point1.y() )
+            tun2 = QRectF( QPointF(tunnel_point2.x(),tunnel_point2.y()-10), QPointF(join_point.x(),join_point.y()+10) );
+
+        // si le point est à droite
+        else if (tunnel_point2.x() > tunnel_point1.x() and tunnel_point2.y() > tunnel_point1.y() )
+             tun2 = QRectF( QPointF(join_point.x(),join_point.y()-10), QPointF(tunnel_point2.x(),tunnel_point2.y()+10) );
+     }
+    //entrée de droite
+    if(enter_side == 3 ){
+        QPointF join_point(tunnel_point2.x(),tunnel_point1.y());
+        tun1 = QRectF( QPointF(tunnel_point1.x(),tunnel_point1.y()-10), QPointF(join_point.x(),join_point.y()+10) );
+        // si le point est en haut
+        if (tunnel_point2.x() > tunnel_point1.x() and tunnel_point2.y() < tunnel_point1.y() )
+           tun2 = QRectF( QPointF(tunnel_point2.x()-10,tunnel_point2.y()), QPointF(join_point.x()+10,join_point.y()) );
+
+        // si le point est en bas
+        else if (tunnel_point2.x() > tunnel_point1.x() and tunnel_point2.y() > tunnel_point1.y() )
+            tun2 = QRectF( QPointF(join_point.x()-10,join_point.y()), QPointF(tunnel_point2.x()+10,tunnel_point2.y()) );
+     }
+
+    QPolygonF tunnel1(tun1), tunnel2(tun2);
+    QPolygonF tunnel_complete = tunnel1.united(tunnel2);
+
+    return tunnel_complete;
 }
 
 
