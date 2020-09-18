@@ -9,6 +9,10 @@ public:
 
     //resize
     void resize(double argSize);
+
+    //update weapon that is print
+    void updateWeaponPrint(double argSize);
+
 private:
     int witchWeapon;
 };

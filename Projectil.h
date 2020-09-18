@@ -24,6 +24,10 @@ public:
 
     //QTimer
     QTimer * get_timer();
+
+    //destruciton projectil
+    void destructionProjectil();
+
 private:
     //number of damage per bullet
     double damage;

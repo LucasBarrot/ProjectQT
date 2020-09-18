@@ -26,7 +26,7 @@ class Room: public QGraphicsItemGroup{
     void closeTheDoor();
 
     //set spawnZone
-    void set_spawnZone(QPointF posSpawnZone);
+    void set_spawnZone(QPointF posSpawnZone, int argSize);
 
     int get_nSideNotRoom();
     bool get_ifRoom(int nSide);
@@ -43,6 +43,9 @@ class Room: public QGraphicsItemGroup{
 
     //spawn zone
     SpawnZone * spawnZone;
+
+    //destruction room
+    void destructionRoom();
 
 private:
     //size room

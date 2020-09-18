@@ -20,6 +20,7 @@ SOURCES += \
     Bridge.cpp \
     Chest.cpp \
     Collider.cpp \
+    DoorToNextLevel.cpp \
     Enemy.cpp \
     EntityCaracter.cpp \
     EntityWeapon.cpp \
@@ -28,7 +29,10 @@ SOURCES += \
     Ground.cpp \
     Heart.cpp \
     Inventory.cpp \
+    ListBoss.cpp \
+    ListEnemy.cpp \
     ListWeapon.cpp \
+    Menu.cpp \
     Minimap.cpp \
     Player.cpp \
     Projectil.cpp \
@@ -40,12 +44,14 @@ SOURCES += \
     Wall.cpp \
     Weapon.cpp \
     WeaponOnGround.cpp \
+    WeaponPixmap.cpp \
     main.cpp
 
 HEADERS += \
     Bridge.h \
     Chest.h \
     Collider.h \
+    DoorToNextLevel.h \
     Enemy.h \
     EntityCaracter.h \
     EntityWeapon.h \
@@ -54,7 +60,10 @@ HEADERS += \
     Ground.h \
     Heart.h \
     Inventory.h \
+    ListBoss.h \
+    ListEnemy.h \
     ListWeapon.h \
+    Menu.h \
     Minimap.h \
     Player.h \
     Projectil.h \
@@ -65,7 +74,8 @@ HEADERS += \
     Update.h \
     Wall.h \
     Weapon.h \
-    WeaponOnGround.h
+    WeaponOnGround.h \
+    WeaponPixmap.h
 
 FORMS += \
     mainwindow.ui

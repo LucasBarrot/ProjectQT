@@ -41,7 +41,7 @@ void Bridge::ConstructBridge(int lengthBridge, int nSide)
     group->addToGroup(wall_1);
 
     group->addToGroup(wall_2);
-    scene()->addItem(group);
+    group->setParentItem(this);
 
 }
 
@@ -53,6 +53,10 @@ double Bridge::get_length()
 double Bridge::get_width()
 {
     return width;
+}
+
+void Bridge::destructionBridge(){
+    delete  this;
 }
 
 void Bridge::createGround(int xSize, int ySize)

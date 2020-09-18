@@ -21,7 +21,7 @@ Room::Room(double argHeightWall, double argHeightBridge){
     sizeWallHeight = argHeightWall;
     heightBridge = argHeightBridge;
 
-    setParentItem(NULL);
+
 }
 
 void Room::constructor(int nSideGate, std::string typeOfRoom){
@@ -60,43 +60,46 @@ void Room::constructor(int nSideGate, std::string typeOfRoom){
     //wall top
     wall_0 = new Wall( widthRoom - sizeCorner * 2 , sizeWallHeight, 0);
     wall_0->setPos(sizeCorner,0);
-    group->addToGroup(wall_0);
+    wall_0->setParentItem(this);
     //wall right
     wall_1 = new Wall(sizeWallHeight, heightRoom - sizeCorner * 2, 2);
     wall_1->setPos(widthRoom - sizeWallHeight, sizeCorner);
-    //wall_1->setPen(Qt::NoPen);
-    group->addToGroup(wall_1);
+    wall_1->setParentItem(this);
     //wall down
     wall_2 = new Wall(widthRoom - sizeCorner * 2, sizeWallHeight, 4);
     wall_2->setPos(sizeCorner,heightRoom - sizeWallHeight);
-    group->addToGroup(wall_2);
+    wall_2->setParentItem(this);
     //wall left
     wall_3 = new Wall(sizeWallHeight, heightRoom - sizeCorner * 2, 6);
     wall_3->setPos(0,sizeCorner);
-    group->addToGroup(wall_3);
+    wall_3->setParentItem(this);
 
     if (nSideGate >= 0) {
         if(nSideGate == 0){
-            group->removeFromGroup(wall_0);
+            wall_0->setParentItem(NULL);
+            delete  wall_0;
             setGate(nSideGate, widthRoom - sizeCorner * 2,sizeWallHeight, sizeCorner,0, false);
         }
         if(nSideGate == 1){
-            group->removeFromGroup(wall_1);
+            wall_1->setParentItem(this);
+            delete wall_1;
             setGate(nSideGate, heightRoom - sizeCorner * 2,sizeWallHeight,widthRoom - sizeWallHeight,sizeCorner, false);
         }
         if(nSideGate == 2){
-            group->removeFromGroup(wall_2);
+            wall_2->setParentItem(this);
+            delete  wall_2;
             setGate(nSideGate, widthRoom - sizeCorner * 2,sizeWallHeight,sizeCorner,heightRoom - sizeWallHeight, false);
         }
         if(nSideGate == 3){
-            group->removeFromGroup(wall_3);
+            wall_3->setParentItem(this);
+            delete wall_3;
             setGate(nSideGate, heightRoom - sizeCorner * 2,sizeWallHeight,0,sizeCorner, false);
         }
     }
 
 
     //add to the scene
-    scene()->addItem(group);
+    group->setParentItem(this);
 }
 
 void Room::update_side_gate(int nSide, int xCoordPar, int yCoordPar){
@@ -104,39 +107,34 @@ void Room::update_side_gate(int nSide, int xCoordPar, int yCoordPar){
     //first we remove the wall
     //after we the fonction that create gate
     if(nSide == 0){
-        //scene()->removeItem(group);
-        group->removeFromGroup(wall_0);
-        scene()->removeItem(wall_0);
+        wall_0->setParentItem(NULL);
         delete wall_0;
-        setGate(nSide, widthRoom - sizeCorner * 2, sizeWallHeight, sizeCorner + xCoordPar, 0+yCoordPar, true);
+        setGate(nSide, widthRoom - sizeCorner * 2, sizeWallHeight, sizeCorner, 0, true);
     }
     if(nSide == 1){
-        group->removeFromGroup(wall_1);
-        scene()->removeItem(wall_1);
+        wall_1->setParentItem(NULL);
         delete wall_1;
-        setGate(nSide, heightRoom - sizeCorner * 2, sizeWallHeight, widthRoom - sizeWallHeight + xCoordPar, sizeCorner + yCoordPar, true);
+        setGate(nSide, heightRoom - sizeCorner * 2, sizeWallHeight, widthRoom - sizeWallHeight, sizeCorner, true);
     }
     if(nSide == 2){
-        group->removeFromGroup(wall_2);
-        scene()->removeItem(wall_2);
+        wall_2->setParentItem(NULL);
         delete wall_2;
-        setGate(nSide, widthRoom - sizeCorner * 2, sizeWallHeight, sizeCorner + xCoordPar, heightRoom - sizeWallHeight +yCoordPar, true);
+        setGate(nSide, widthRoom - sizeCorner * 2, sizeWallHeight, sizeCorner, heightRoom - sizeWallHeight, true);
     }
     if(nSide == 3){
-        group->removeFromGroup(wall_3);
-        scene()->removeItem(wall_3);
+        wall_3->setParentItem(NULL);
         delete wall_3;
-        setGate(nSide, heightRoom - sizeCorner * 2, sizeWallHeight, xCoordPar, sizeCorner + yCoordPar, true);
+        setGate(nSide, heightRoom - sizeCorner * 2, sizeWallHeight, 0, sizeCorner, true);
     }
 }
 
-void Room::set_spawnZone(QPointF posSpawnZone){
+void Room::set_spawnZone(QPointF posSpawnZone, int argSize){
     //SpawnZone
     spawnZone = new SpawnZone(0, 0, widthRoom - 2 * sizeCorner, heightRoom - 2 * sizeCorner, type);
     //spawnZone->setParentItem(this);
     spawnZone->setPos(posSpawnZone + QPointF(sizeCorner, sizeCorner));
     scene()->addItem(spawnZone);
-    spawnZone->spawn();
+    spawnZone->spawn(argSize);
 }
 
 int Room::get_nSideNotRoom(){
@@ -153,6 +151,12 @@ double Room::get_width(){
 
 std::string Room::get_type(){
     return type;
+}
+
+void Room::destructionRoom(){
+    spawnZone->destructionSpawnZone();
+
+    delete  this;
 }
 
 
@@ -210,7 +214,7 @@ void Room::createGround(int xSize, int ySize){
             Ground * ground = new Ground(xSizeOneBlock, ySizeOneBlock, rand()%20, rand()%4);
             //set the position of the cell
             ground->setPos(this->pos().x() + xPositionNextBlock, this->pos().y() + yPositionNextBlock);
-            group->addToGroup(ground);
+            ground->setParentItem(this);
             yPositionNextBlock += ySizeOneBlock;
         }
         xPositionNextBlock += xSizeOneBlock;
@@ -253,22 +257,20 @@ void Room::setGate(int nSide, int xSize, int ySize, int xCoord, int yCoord, bool
 
     //if update is true, the group is already set in the scene, we need to remove it first, add our new gate and add it again to the scene.
     if(update == true){
-        scene()->removeItem(group);
-        group->addToGroup(gate_1);
-        group->addToGroup(gate_2);
-        scene()->addItem(group);
+        gate_1->setParentItem(this);
+        gate_2->setParentItem(this);
 
     }
     else{
-        group->addToGroup(gate_1);
-        group->addToGroup(gate_2);
+        gate_1->setParentItem(this);
+        gate_2->setParentItem(this);
     }
 }
 
 void Room::setCorner(int xCoord, int yCoord, int nSide){
     Wall * corner = new Wall(sizeCorner,sizeCorner, nSide);
     corner->setPos(xCoord,yCoord);
-    group->addToGroup(corner);
+    corner->setParentItem(this);
 }
 
 

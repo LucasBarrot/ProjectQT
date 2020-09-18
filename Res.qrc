@@ -44,5 +44,14 @@
         <file>Source/Image/Chest/chest_full_open_anim_f0.png</file>
         <file>Source/Image/projectil/Projectil_Bazooka.png</file>
         <file>Source/Image/Weapon/Bazooka.png</file>
+        <file>Source/Image/Boss/big_demon_run_anim_f3.png</file>
+        <file>Source/Image/Boss/big_demon_run_anim_f2.png</file>
+        <file>Source/Image/Boss/big_demon_run_anim_f1.png</file>
+        <file>Source/Image/Boss/big_demon_run_anim_f0.png</file>
+        <file>Source/Image/Boss/big_demon_idle_anim_f3.png</file>
+        <file>Source/Image/Boss/big_demon_idle_anim_f2.png</file>
+        <file>Source/Image/Boss/big_demon_idle_anim_f1.png</file>
+        <file>Source/Image/Boss/big_demon_idle_anim_f0.png</file>
+        <file>Source/Image/Door/doors_leaf_open.png</file>
     </qresource>
 </RCC>

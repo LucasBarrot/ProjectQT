@@ -10,10 +10,19 @@ Game::Game(QWidget * parent){
     //
     verifLeftClick = false;
 
+    //set List Weapon
+    listWeapon = new ListWeapon();
+
+    //set list enemy
+    listEnemy = new ListEnemy();
+
+    //set list boss
+    listBoss = new ListBoss();
+
     //Create scene
     scene = new QGraphicsScene();
     //setSceneRect(scene->sceneRect());
-    setBackgroundBrush(QBrush(QColor(Qt::black)));
+    setBackgroundBrush(QBrush(QColor(Qt::white)));
 
     world = new Generation_World();
 
@@ -22,15 +31,12 @@ Game::Game(QWidget * parent){
     world->generate();
 
     for(int indexRoom = 0; indexRoom < world->tabRoom.size(); ++indexRoom){
-        world->tabRoom.at(indexRoom)->set_spawnZone(QPointF(world->tabRoom.at(indexRoom)->x(), world->tabRoom.at(indexRoom)->y()));
+        world->tabRoom.at(indexRoom)->set_spawnZone(QPointF(world->tabRoom.at(indexRoom)->x(), world->tabRoom.at(indexRoom)->y()), listEnemy->get_sizeTabConstructeurEnemy());
     }
-
-    //set List Weapon
-    listWeapon = new ListWeapon();
 
     //add Inventory
     inventory = new Inventory();
-    inventory->addFirstWeapon(listWeapon->get_constructeur(0));
+    inventory->addFirstWeapon(listWeapon->get_constructeurOnTab(0));
 
     //add player
     player = new Player(fps);
@@ -43,8 +49,11 @@ Game::Game(QWidget * parent){
     scene->addItem(player);
     player->set_objectOfPlayerInScene();
 
+    //set level visibility of player to be above world
+    player->setZValue(1);
+
     //add weapon, after creation player and inventory
-    player->addWeapon(inventory->get_Weapon_1());
+    player->addWeapon(inventory->get_weapon_1());
 
     //add weapon (test)
     scene->addItem(player->weapon);
@@ -82,9 +91,9 @@ Game::Game(QWidget * parent){
     show();
 
     //add update
-    Update * update = new Update(fps);
+    timer = new QTimer();
 
-
+    Update * update = new Update(fps, timer);
 }
 
 void Game::mouseMoveEvent(QMouseEvent *event)
@@ -99,8 +108,6 @@ void Game::mouseMoveEvent(QMouseEvent *event)
     //line to get angle from weapon
     QPointF pt1Weapon(mapFromScene(QPoint(player->weapon->test_ouputWeapon->scenePos().x(),
                                           player->weapon->test_ouputWeapon->scenePos().y())));
-
-    //    qDebug() << player->x() + player->weapon->entityWeapon->get_lineRotationWeapon().p2().x() << player->y() + player->weapon->entityWeapon->get_lineRotationWeapon().p2().y();
     QPointF pt2Weapon(event->pos());
     QLineF lineAngleWeapon(pt1Weapon,pt2Weapon);
     double angleWeapon = -1 * lineAngleWeapon.angle();
@@ -130,8 +137,6 @@ void Game::resizeEvent(QResizeEvent *event){
     heightScreen = height();
     widthScreen = width();
     ui->setRect(0,0, widthScreen * 0.2 / 3, heightScreen/3);
-    qDebug() << widthScreen << heightScreen;
-    qDebug() << ui->rect().width() << ui->rect().height();
     //resize object in UI
     ui->resize();
 
@@ -177,5 +182,38 @@ void Game::mouseDoubleClickEvent(QMouseEvent *event){
 bool Game::get_verifRotationCaracter()
 {
     return verifRotationCaractere;
+}
+
+void Game::newLevel(){
+    //world->destructionLevel();
+
+    //timer stop to not interfer with the destruction of the world
+    timer->stop();
+
+    //destruction old world
+    world->destructionLevel();
+
+    //destruciton of all old bullet
+    for(int indexProjectil = tabProjectil.size() - 1; 0 <= indexProjectil; --indexProjectil){
+        tabProjectil.takeAt(indexProjectil)->destructionProjectil();
+        //tabProjectil.remove(indexProjectil);
+    }
+
+    scene->removeItem(world);
+    world = new Generation_World();
+    scene->addItem(world);
+
+    world->generate();
+
+    for(int indexRoom = 0; indexRoom < world->tabRoom.size(); ++indexRoom){
+        world->tabRoom.at(indexRoom)->set_spawnZone(QPointF(world->tabRoom.at(indexRoom)->x(), world->tabRoom.at(indexRoom)->y()), listEnemy->get_sizeTabConstructeurEnemy());
+    }
+
+    scene->setSceneRect(scene->itemsBoundingRect().x() - width()/4, scene->itemsBoundingRect().y() - height()/4,scene->itemsBoundingRect().size().rwidth() + width()/2, scene->itemsBoundingRect().size().rheight() + height()/2);
+    setSceneRect(scene->sceneRect());
+
+    player->setPos(100,100);
+
+    timer->start();
 }
 

@@ -8,6 +8,7 @@
 
 #include "EntityWeapon.h"
 #include "Collider.h"
+#include "WeaponPixmap.h"
 
 
 class Weapon: public QObject, public QGraphicsRectItem{
@@ -26,6 +27,9 @@ public:
     //update pixmap after changing weapon
     void updatePixmap();
 
+    //weapon equip change
+    void weaponEquipeChange();
+
 
 private:
 
@@ -40,10 +44,14 @@ private:
     void updateSpecialShoot();
 
     //timer for continuous shooting
-    QTimer *timer;
+    QTimer *timerSimpleShoot;
+    QTimer *timerSpecialShoot;
 
     //Point where the weapon is
     QPointF pointPosWeapon;
+
+    //weapon pixmap
+    WeaponPixmap * weaponPixmap;
 
 };
 

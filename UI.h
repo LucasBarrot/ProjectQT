@@ -16,6 +16,9 @@ public:
     //resize
     void resize();
 
+    //update weapon on Ui
+    void updateWeaponSlot();
+
     //minimap
     Minimap * minimap;
 

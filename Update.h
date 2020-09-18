@@ -8,10 +8,11 @@
 
 #include "Game.h"
 
-class Update: public QObject {
+class Update: public QObject, public QGraphicsRectItem {
     Q_OBJECT;
 public:
-    Update(double fps);
+    Update(double fps, QTimer * argTimer);
+    QTimer * timer;
 private:
     void updateBaseOnFps();
     double fps;

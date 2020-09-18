@@ -52,7 +52,7 @@ void UI::printOnScreen(){
     }
 
     //Weapon
-    double size = (rect().width() - 15)/2;
+    double size = (rect().width() - 5)/2;
 
     //set slot 1
     slotWeapon_1 = new SlotWeaponUI(1, size);
@@ -60,6 +60,9 @@ void UI::printOnScreen(){
     slotWeapon_1->setPos(5, tabHeart.at(tabHeart.size() -1)->pos().y() + sizeHeart + 5);
 
     //set slote 2
+    slotWeapon_2 = new SlotWeaponUI(2, size);
+    slotWeapon_2->setParentItem(this);
+    slotWeapon_2->setPos(5 + size, tabHeart.at(tabHeart.size() -1)->pos().y() + sizeHeart + 5);
 
 }
 
@@ -91,6 +94,18 @@ void UI::resize(){
         //resize slot 1
         slotWeapon_1->resize(size);
         slotWeapon_1->setPos(5, tabHeart.at(tabHeart.size() -1)->pos().y() + sizeHeart + 5);
+
+        //resize slot 2
+        slotWeapon_2->resize(size);
+        slotWeapon_2->setPos(5 + size, tabHeart.at(tabHeart.size() -1)->pos().y() + sizeHeart + 5);
     }
 
+}
+
+void UI::updateWeaponSlot(){
+    //update slot weapon
+    double size = (rect().width() - 15)/2;
+
+    slotWeapon_1->updateWeaponPrint(size);
+    slotWeapon_2->updateWeaponPrint(size);
 }

@@ -25,7 +25,8 @@ void Generation_World::generate()
     Room * firstRoom = new Room(heightWall, heightBridge);
     tabRoomFree.append(firstRoom);
     tabRoom.append(firstRoom);
-    scene()->addItem(tabRoomFree.at(0));
+//    scene()->addItem(tabRoomFree.at(0));
+    tabRoomFree.at(0)->setParentItem(this);
     // Argument "-1" because no other room
     tabRoomFree.at(0)->constructor(-1, "spawn");
     tabRoomFree.at(0)->setTransformOriginPoint(tabRoomFree.at(0)->get_height()/2,tabRoomFree.at(0)->get_width()/2);
@@ -169,7 +170,7 @@ void Generation_World::generate()
             tabRoomFree.push_back(new_room);
             tabRoom.push_back(new_room);
 
-            scene()->addItem(tabRoomFree.at(indexRoom));
+
 
             int randomTypeRoom = rand() % 4;
 
@@ -178,7 +179,7 @@ void Generation_World::generate()
             double xOriginsRandomRoom = tabRoomFree.at(indexRoomRandom)->group->x() +  tabRoomFree.at(indexRoomRandom)->transformOriginPoint().x() ;
             double yOriginsRandomRoom = tabRoomFree.at(indexRoomRandom)->group->y() +  tabRoomFree.at(indexRoomRandom)->transformOriginPoint().y() ;
 
-            if(randomTypeRoom == 3 && checkNGiftRoom < 2){
+            if(/*randomTypeRoom == 3 &&*/ checkNGiftRoom < 2){
                 tabRoomFree.at(indexRoom)->constructor(SidePreviousRoom, "giftRoom");
                 verifGiftRoom = true;
                 checkNGiftRoom ++;   }
@@ -225,6 +226,7 @@ void Generation_World::generate()
             }
 
 
+            tabRoomFree.at(indexRoom)->setParentItem(this);
 
             if (verifGiftRoom == true){
                 tabRoomFree.remove(indexRoom);
@@ -248,6 +250,16 @@ void Generation_World::generate()
 
     qDebug() << CheckRoom;
     qDebug() << checkNumberBridge;
+
+    scene()->removeItem(colliderBottom);
+    scene()->removeItem(colliderTop);
+    scene()->removeItem(colliderLeft);
+    scene()->removeItem(colliderRight);
+
+    delete colliderBottom;
+    delete colliderTop;
+    delete colliderLeft;
+    delete colliderRight;
 }
 
 double Generation_World::get_heightWall()
@@ -257,7 +269,7 @@ double Generation_World::get_heightWall()
 
 
 int Generation_World::addBridge(int nSide, int checkNumberBridge, int nRoomRandom, int xdisplacement, int yDisplacement, int height){
-    scene()->addItem(tab_bridge.at(checkNumberBridge));
+    tab_bridge.at(checkNumberBridge)->setParentItem(this);
     tab_bridge.at(checkNumberBridge)->ConstructBridge(height, nSide);
     tab_bridge.at(checkNumberBridge)->group->setPos(tabRoomFree.at(nRoomRandom)->group->x() + xdisplacement, tabRoomFree.at(nRoomRandom)->group->y() + yDisplacement);
     checkNumberBridge ++;
@@ -272,6 +284,19 @@ bool Generation_World::verifCollider(QList<QGraphicsItem *> list_Collider)
          }
     }
     return false;
+}
+
+void Generation_World::destructionLevel(){
+    for(int indexRoom = tabRoom.size() - 1; 0 <= indexRoom ; --indexRoom){
+        //scene()->removeItem(tabRoom.takeAt(indexRoom)->group);
+        tabRoom.at(indexRoom)->destructionRoom();
+        tabRoom.remove(indexRoom);
+
+    }
+    for(int indexBridge = tab_bridge.size() - 1;  0 <= indexBridge; --indexBridge){
+        tab_bridge.at(indexBridge)->destructionBridge();
+        tab_bridge.remove(indexBridge);
+    }
 }
 
 

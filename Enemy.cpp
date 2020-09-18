@@ -9,10 +9,12 @@
 
 extern Game * game;
 
-Enemy::Enemy()
-{
-    //set entity necromancer
-    enemyEntity = set_necromancer();
+Enemy::Enemy(int argIndex, bool argBossOrEnemy){
+    //set index list enemy
+    indexListEnemy = argIndex;
+
+    //set boss or enemy
+    bossOrEnemy = argBossOrEnemy;
 
     //distance minimal to player
     distanceMinamalToPlayer = 100;
@@ -25,11 +27,39 @@ Enemy::Enemy()
     lineOfSight = new QGraphicsRectItem();
     lineOfSight->setParentItem(this);
     lineOfSight->setPen(Qt::NoPen);
+
+    //set to false initialized entity enemy because yet is not set
+    initializedEntityEnemy = false;
 }
 
 void Enemy::UpdateEnemy(){
-    if(enemyEntity->get_displacement() == 0){
+    if(initializedEntityEnemy == false){
+        //now we gonna initialized entity so we can change initializedEntityEnemy
+        initializedEntityEnemy = true;
+        //set entity necromancer
+        if(bossOrEnemy == false){
+            enemyEntity = game->listEnemy->get_constructeurOnTab(indexListEnemy, this);
+        }
+        else {
+            enemyEntity = game->listBoss->get_constructeurOnTab(indexListEnemy, this);
+
+            //setPos in scene
+            setPos(parentItem()->boundingRect().width() / 2 - enemyEntity->get_widthEntity() / 2 ,  parentItem()->boundingRect().height() / 2 - enemyEntity->get_heightEntity() /2);
+            set_prevPos(pos());
+        }
+
         enemyEntity->set_displacement(100, game->fps);
+
+        enemyEntity->setParentItem(this);
+
+
+        //test
+        setRect(0,0, enemyEntity->get_widthEntity(), enemyEntity->get_heightEntity());
+
+        enemyEntity->colliderBottom->setParentItem(this);
+        enemyEntity->colliderTop->setParentItem(this);
+        enemyEntity->colliderLeft->setParentItem(this);
+        enemyEntity->colliderRight->setParentItem(this);
     }
     QPointF pt1(parentItem()->x() + x()  + rect().width()/2, parentItem()->y() + y() + rect().height()/2);
     QPointF pt2(game->player->x() + game->player->playerEntity->get_widthEntity()/2 , game->player->y() + game->player->playerEntity->get_heightEntity()/2);
@@ -106,87 +136,24 @@ void Enemy::set_ToAttackMode(){
 }
 
 void Enemy::set_objectOfEnemyInScene(){
-    setRect(0,0, enemyEntity->get_widthEntity(), enemyEntity->get_heightEntity());
+//    setRect(0,0, enemyEntity->get_widthEntity(), enemyEntity->get_heightEntity());
 
-    enemyEntity->colliderBottom->setParentItem(this);
-    enemyEntity->colliderTop->setParentItem(this);
-    enemyEntity->colliderLeft->setParentItem(this);
-    enemyEntity->colliderRight->setParentItem(this);
+//    enemyEntity->colliderBottom->setParentItem(this);
+//    enemyEntity->colliderTop->setParentItem(this);
+//    enemyEntity->colliderLeft->setParentItem(this);
+    //    enemyEntity->colliderRight->setParentItem(this);
 }
 
+bool Enemy::get_bossOrEnemy(){
+    return bossOrEnemy;
+}
 
+void Enemy::set_pathProjectil(QString argPath){
+    pathImageProjectil = argPath;
+}
 
-
-Entity *Enemy::set_necromancer(){
-    //create a new temporary entity
-    Entity * entity = new Entity();
-
-    //set entity as enemy
-    entity->set_PlayerOrEnemy(false);
-
-    //set the parent of the entity to this class(player)
-    //entity->setParentItem(this);
-
-    //set displacement
-    entity->set_displacement(0, 0);
-
-    //set health
-    entity->set_maxHealth(25);
-    entity->set_actualHealth(entity->get_maxHealth());
-
-    //set status (test)
-    entity->set_status(0);
-
-    //set index sprite
-    entity->set_indexSprite(0);
-
-    //set value of verifRotationEnemy
-    entity->set_verifRotation(true);
-
-    //define parent
-    entity->setParentItem(this);
-
-    //set invulnerability to true
-    entity->set_invulnerability(true);
-
-    //set Sprite entity
-    //Sprite idle
-    entity->addSprite(":/Source/Source/Image/Caractere/Necromancer/necromancer_idle_anim_f0.png", 0);
-    entity->addSprite(":/Source/Source/Image/Caractere/Necromancer/necromancer_idle_anim_f1.png", 0);
-    entity->addSprite(":/Source/Source/Image/Caractere/Necromancer/necromancer_idle_anim_f2.png", 0);
-    entity->addSprite(":/Source/Source/Image/Caractere/Necromancer/necromancer_idle_anim_f3.png", 0);
-    //Sprite Run
-    entity->addSprite(":/Source/Source/Image/Caractere/Necromancer/necromancer_run_anim_f0.png", 1);
-    entity->addSprite(":/Source/Source/Image/Caractere/Necromancer/necromancer_run_anim_f1.png", 1);
-    entity->addSprite(":/Source/Source/Image/Caractere/Necromancer/necromancer_run_anim_f2.png", 1);
-    entity->addSprite(":/Source/Source/Image/Caractere/Necromancer/necromancer_run_anim_f3.png", 1);
-
-    //set Current Sprite
-    entity->set_currentSprite(":/Source/Source/Image/Caractere/Necromancer/necromancer_idle_anim_f0.png");
-
-    //set size entity
-    entity->set_sizeEntity(entity->get_currentSprite().width(), entity->get_currentSprite().height());
-
-    //set entity coord
-    entity->set_originEntity(entity->get_widthEntity() / 2, entity->get_heightEntity() / 2);
-
-    //set collider
-    //set size collider
-    entity->set_colliderSize(2, 2);
-    //position
-    entity->colliderBottom = new Collider(entity->get_widthCollider(), entity->get_heightCollider());
-    entity->colliderBottom->setPos(pos().x() + entity->get_widthEntity()/2 - entity->get_widthCollider()/2, pos().y() +  entity->get_heightEntity() + entity->get_heightCollider() * 0.5);
-    entity->colliderTop = new Collider(entity->get_widthCollider(), entity->get_heightCollider());
-    entity->colliderTop->setPos(pos().x() + entity->get_widthEntity()/2 - entity->get_widthCollider()/2, pos().y() - entity->get_heightCollider() * 1.5);
-    entity->colliderLeft = new Collider(entity->get_widthCollider(), entity->get_heightCollider());
-    entity->colliderLeft->setPos(pos().x() - entity->get_widthCollider() * 1.5,  pos().y() + entity->get_heightEntity()/2 - entity->get_heightCollider()/2 );
-    entity->colliderRight = new Collider(entity->get_widthCollider(), entity->get_heightCollider());
-    entity->colliderRight->setPos(pos().x() +  entity->get_widthEntity()  + entity->get_widthCollider() * 0.5, pos().y() + entity->get_heightEntity()/2 - entity->get_heightCollider()/2);
-
-    //Path image projectil shooted by enemy
-    pathImageProjectil = ":/Source/Source/Image/projectil/Projectil_1.png";
-
-    return entity;
+void Enemy::destructionEnemy(){
+    delete this;
 }
 
 void Enemy::shootSimple(double angle){

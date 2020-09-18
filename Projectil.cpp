@@ -98,14 +98,20 @@ void Projectil::updatePositionOnScreen(int argIndexProjectil)
                     delete this;
                 }
                 else {
+                    //for a qvector we don't remove it from the scene (if we do it, it going to crash, allocating problem with pointer)
+                    SpawnZone * spawnZoneEnemy = dynamic_cast<SpawnZone*>(enemy->parentItem());
+
+                    if(enemy->get_bossOrEnemy()){
+                        spawnZoneEnemy->spawnDoorToNextLevel();
+                    }
+
                     //enemy is dead
                     //remove bullet
                     game->tabProjectil.remove(argIndexProjectil);
                     scene()->removeItem(this);
                     delete this;
 
-                    //for a qvector we don't remove it from the scene (if we do it, it going to crash, allocating problem with pointer)
-                    SpawnZone * spawnZoneEnemy = dynamic_cast<SpawnZone*>(enemy->parentItem());
+
                     delete spawnZoneEnemy->tabEnemy.takeAt(spawnZoneEnemy->tabEnemy.indexOf(enemy));
                 }
             }
@@ -128,4 +134,8 @@ QString Projectil::get_parentName(){
 QTimer *Projectil::get_timer()
 {
     return timer;
+}
+
+void Projectil::destructionProjectil(){
+    delete this;
 }

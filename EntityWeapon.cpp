@@ -43,11 +43,19 @@ void EntityWeapon::set_rateOfFireSpecial(double argTime){
     rateOfFireSpecial = argTime;
 }
 
+void EntityWeapon::set_scaleImg(double argScale){
+    scaleImg = argScale;
+}
+
+double EntityWeapon::get_scaleImg(){
+    return scaleImg;
+}
+
 void EntityWeapon::set_imgWeapon(QString argPath){
     //set image of the weapon
     img = QImage(argPath);
-    img = img.scaled(10, 4);
-    setPixmap(QPixmap::fromImage(img));
+    img = img.scaled(img.width() * scaleImg, img.height() * scaleImg);
+//    setPixmap(QPixmap::fromImage(img));
 }
 
 QImage EntityWeapon::get_imgWeapon(){
@@ -68,6 +76,10 @@ void EntityWeapon::set_pathImgProjectil(QString argPath){
 
 QString EntityWeapon::get_pathImgProjectil(){
     return pathImgrojectil;
+}
+
+void EntityWeapon::updatePixmap(){
+    setPixmap(QPixmap::fromImage(img));
 }
 
 void EntityWeapon::set_angleWeapon(double argAngle){
@@ -92,6 +104,14 @@ void EntityWeapon::set_posWeaponInvert(QPointF argPos){
 
 QPointF EntityWeapon::get_posWeaponInvert(){
     return posWeaponInvert;
+}
+
+void EntityWeapon::set_pointSpawnProjecitl(QPointF argPoint){
+    pointSpawnProjectil = argPoint;
+}
+
+QPointF EntityWeapon::get_pointSpawnProjectil(){
+    return pointSpawnProjectil;
 }
 
 void EntityWeapon::updateSimpleShoot(bool argReady){

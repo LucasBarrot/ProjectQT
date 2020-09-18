@@ -14,6 +14,9 @@ public:
     double get_width();
     QGraphicsItemGroup * group;
 
+    //destrution bridge
+    void destructionBridge();
+
 
 private:
     double width;

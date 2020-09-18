@@ -6,13 +6,13 @@
 
 #include "Collider.h"
 
-class Entity : public QGraphicsPixmapItem {
+class EntityCaracter : public QGraphicsPixmapItem {
 public:
-    Entity();
+    EntityCaracter();
 
     //Enemy or player
-    void set_PlayerOrEnemy(bool argEntityIsPlayer);
-    bool get_entityIsPlayer();
+    void set_PlayerOrEnemy(QString argType);
+    QString get_entityIsPlayer();
 
     //displacement
     void set_displacement(int displacementPerSecond,int fps);
@@ -85,7 +85,7 @@ public:
 
 private:
     //Player or Enemy
-    bool entityIsPlayer;
+    QString TypeCaracter;
 
     //displacement entity
     double displacement;

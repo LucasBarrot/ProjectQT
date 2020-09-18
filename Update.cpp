@@ -5,7 +5,7 @@
 
 extern Game * game;
 
-Update::Update(double argFps)
+Update::Update(double argFps, QTimer * argTimer)
 {
     //set fps
     fps = argFps;
@@ -17,7 +17,7 @@ Update::Update(double argFps)
     firstFrame = true;
 
     //set connect with a timer base on fps
-    QTimer *timer = new QTimer();
+    timer = argTimer;
     connect(timer,&QTimer::timeout,this,&Update::updateBaseOnFps);
     timer->start( 1000/fps);
 
@@ -36,15 +36,14 @@ void Update::updateBaseOnFps(){
     //move player
     game->player->moving();
 
-    //update enemi
     for(int indexRoom = 0; indexRoom < game->world->tabRoom.size(); indexRoom++){
         Room * tmpRoom = game->world->tabRoom.at(indexRoom);
         for(int indexEnemy = 0; indexEnemy < tmpRoom->spawnZone->tabEnemy.size(); indexEnemy++){
             Enemy * tmpEnemy = tmpRoom->spawnZone->tabEnemy.at(indexEnemy);
+            tmpEnemy->UpdateEnemy();
             if(indexFps % int(fps / 3) == 0 && indexFps != 0) {
                 tmpEnemy->UpdateSpriteEnemy();
             }
-            tmpEnemy->UpdateEnemy();
         }
     }
 

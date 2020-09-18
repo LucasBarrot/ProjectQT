@@ -38,7 +38,7 @@ public:
     double get_angle();
 
     //set entity player
-    Entity * playerEntity;
+    EntityCaracter * playerEntity;
 
     //set in scene object of player (playerEntity and collider)
     void set_objectOfPlayerInScene();
@@ -52,6 +52,9 @@ public:
     //Weapon (test)
     Weapon * weapon;
     void addWeapon(EntityWeapon * argEntity);
+
+    //weapon has been change update pixmap
+    void changeWeapon(int indexWeapon);
 
 
 signals:
@@ -71,7 +74,7 @@ private:
     bool verifFirstKeyMOuvement;
 
     //define entity player;
-    Entity * set_entityPlayer(int player);
+    EntityCaracter * set_entityPlayer(int player);
 
     //To know in wich room is the player
     SpawnZone * playerIsInRoom;

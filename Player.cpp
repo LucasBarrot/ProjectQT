@@ -3,6 +3,7 @@
 #include "Wall.h"
 #include "Game.h"
 #include "Enemy.h"
+#include "WeaponOnGround.h"
 
 #include <QKeyEvent>
 #include <QDebug>
@@ -21,12 +22,12 @@ Player::Player(double fps){
 }
 
 void Player::keyPressEvent(QKeyEvent *event){
-
+    //do not repeat key press
     if (!event->isAutoRepeat()){
+        //only Z Q S D can enter
         if((event->key() == Qt::Key_Q || event->key() == Qt::Key_Z || event->key() == Qt::Key_D || event->key() == Qt::Key_S)){
             keysPressed_.insert(event->key());
-            qDebug() << event->key() << keysPressed_.size();
-
+            //if the player press one touch or more change the animation of idle to mouvement
             if(keysPressed_.size() != 0 && verifFirstKeyMOuvement == true){
 
                 verifFirstKeyMOuvement = false;
@@ -34,8 +35,15 @@ void Player::keyPressEvent(QKeyEvent *event){
                 playerEntity->changeSprite();
             }
         }
+        //only space can enter
         else if (event->key() == Qt::Key_Space){
             action();
+        }
+        else if(event->key() == Qt::Key_Ampersand && weapon->entityWeapon != game->inventory->get_weapon_1() && game->inventory->get_initializedWeapon_1()){
+            changeWeapon(1);
+        }
+        else if(event->key() == Qt::Key_Eacute && weapon->entityWeapon != game->inventory->get_weapon_2() && game->inventory->get_initializedWeapon_2()){
+            changeWeapon(2);
         }
 
     }
@@ -45,12 +53,12 @@ void Player::keyPressEvent(QKeyEvent *event){
 
 void Player::keyReleaseEvent(QKeyEvent *event){
 
-
-
+    //when a key is release do this and is not repeate do this
     if (!event->isAutoRepeat()){
+        //if the key release is Z, Q, S, D because we don't want other touch like space to enter the if
         if((event->key() == Qt::Key_Q || event->key() == Qt::Key_Z || event->key() == Qt::Key_D || event->key() == Qt::Key_S)){
             keysPressed_.erase(event->key());
-
+            //if no ther touch press chenge the animation of movement to idle
             if(keysPressed_.size() == 0 && (event->key() == Qt::Key_Q || event->key() == Qt::Key_Z || event->key() == Qt::Key_D || event->key() == Qt::Key_S)){
                 playerEntity->set_status(0);
                 verifFirstKeyMOuvement = true;
@@ -100,22 +108,27 @@ void Player::action(){
     //define list of QGraphics Item that contain every colliding items
     QList<QGraphicsItem *> colliding_items = this->collidingItems();
 
-    bool verifChest = false;
-    int indexColliderStop;
-
     //check every colliding items if it is a chest
     for (int indexCollider = 0, n = colliding_items.size(); indexCollider < n; ++indexCollider){
+        //if chest detect
          if(typeid (*(colliding_items[indexCollider])).name() == typeid(Chest).name()){
-             verifChest = true;
-             indexColliderStop = indexCollider;
+             Chest * chestTouchByPlayer = dynamic_cast<Chest*>(colliding_items.at(indexCollider));
+             if(!chestTouchByPlayer->get_chestOpen()){
+                 chestTouchByPlayer->openChest();
+                 break;
+             }
+         }
+        //if weapon on ground detect
+         if(typeid (*(colliding_items[indexCollider])).name() == typeid(WeaponOnGround).name()){
+             WeaponOnGround * weaponOnGroundTouchByPlayer = dynamic_cast<WeaponOnGround*>(colliding_items.at(indexCollider));
+             game->inventory->changeWeapon(weaponOnGroundTouchByPlayer->get_entityWeaponOnGround());
+             delete weaponOnGroundTouchByPlayer;
              break;
          }
-    }
-
-    //if player collide with a chest and space is pressed, open the chest
-    if(verifChest){
-        Chest * chestTouchByPlayer = dynamic_cast<Chest*>(colliding_items.at(indexColliderStop));
-        chestTouchByPlayer->openChest();
+         if(typeid (*(colliding_items[indexCollider])).name() == typeid(DoorToNextLevel).name()){
+             game->newLevel();
+             break;
+         }
     }
 }
 
@@ -127,70 +140,82 @@ void Player::addWeapon(EntityWeapon * argEntity){
      weapon->setParentItem(this);
 }
 
+void Player::changeWeapon(int indexWeapon){
+    if(indexWeapon == 1){
+        weapon->entityWeapon = game->inventory->get_weapon_1();
+        weapon->weaponEquipeChange();
+    }
+    else if(indexWeapon == 2){
+        weapon->entityWeapon = game->inventory->get_weapon_2();
+        weapon->weaponEquipeChange();
+    }
+}
+
+
 //define entity player
-Entity * Player::set_entityPlayer(int fps)
+EntityCaracter * Player::set_entityPlayer(int fps)
 {
-    Entity * entity = new Entity();
+    EntityCaracter * tmpEntity = new EntityCaracter();
 
     //set entity is player
-    entity->set_PlayerOrEnemy(true);
+    tmpEntity->set_PlayerOrEnemy("Player");
 
     //set the parent of the entity to this class(player)
-    entity->setParentItem(this);
+    tmpEntity->setParentItem(this);
 
     //set displacement
-    entity->set_displacement(150, fps);
+    tmpEntity->set_displacement(150, fps);
 
     //set status (test)
-    entity->set_status(0);
+    tmpEntity->set_status(0);
 
     //set healtyh
-    entity->set_maxHealth(100);
-    entity->set_actualHealth(entity->get_actualHealth());
+    tmpEntity->set_maxHealth(100);
+    tmpEntity->set_actualHealth(tmpEntity->get_actualHealth());
 
     //set index sprite
-    entity->set_indexSprite(0);
+    tmpEntity->set_indexSprite(0);
 
     //set verif rotation player
-    entity->set_verifRotation(true);
+    tmpEntity->set_verifRotation(true);
 
     //set Sprite entity
     //Sprite idle
-    entity->addSprite(":/Source/Source/Image/Caractere/Wizzard/wizzard_m_idle_anim_f0.png", 0);
-    entity->addSprite(":/Source/Source/Image/Caractere/Wizzard/wizzard_m_idle_anim_f1.png", 0);
-    entity->addSprite(":/Source/Source/Image/Caractere/Wizzard/wizzard_m_idle_anim_f2.png", 0);
-    entity->addSprite(":/Source/Source/Image/Caractere/Wizzard/wizzard_m_idle_anim_f3.png", 0);
+    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Wizzard/wizzard_m_idle_anim_f0.png", 0);
+    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Wizzard/wizzard_m_idle_anim_f1.png", 0);
+    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Wizzard/wizzard_m_idle_anim_f2.png", 0);
+    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Wizzard/wizzard_m_idle_anim_f3.png", 0);
     //Sprite Run
-    entity->addSprite(":/Source/Source/Image/Caractere/Wizzard/wizzard_m_run_anim_f0.png", 1);
-    entity->addSprite(":/Source/Source/Image/Caractere/Wizzard/wizzard_m_run_anim_f1.png", 1);
-    entity->addSprite(":/Source/Source/Image/Caractere/Wizzard/wizzard_m_run_anim_f2.png", 1);
-    entity->addSprite(":/Source/Source/Image/Caractere/Wizzard/wizzard_m_run_anim_f3.png", 1);
+    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Wizzard/wizzard_m_run_anim_f0.png", 1);
+    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Wizzard/wizzard_m_run_anim_f1.png", 1);
+    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Wizzard/wizzard_m_run_anim_f2.png", 1);
+    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Wizzard/wizzard_m_run_anim_f3.png", 1);
 
     //set Current Sprite
-    entity->set_currentSprite(":/Source/Source/Image/Caractere/Wizzard/wizzard_m_idle_anim_f0.png");
+    tmpEntity->set_currentSprite("");
 
     //set size entity
-    entity->set_sizeEntity(entity->get_currentSprite().width(), entity->get_currentSprite().height());
+    tmpEntity->set_sizeEntity(tmpEntity->get_currentSprite().width(), tmpEntity->get_currentSprite().height());
 
     //set entity coord
-    entity->set_originEntity(entity->get_widthEntity() / 2, entity->get_heightEntity() / 2);
+    tmpEntity->set_originEntity(tmpEntity->get_widthEntity() / 2, tmpEntity->get_heightEntity() / 2);
 
     //set collider
     //set size collider
-    entity->set_colliderSize(2, 2);
+    tmpEntity->set_colliderSize(2, 2);
     //position
-    entity->colliderBottom = new Collider(entity->get_widthCollider(), entity->get_heightCollider());
-    entity->colliderBottom->setPos(pos().x() + entity->get_widthEntity()/2 - entity->get_widthCollider()/2, pos().y() +  entity->get_heightEntity() - entity->get_heightCollider());
-    entity->colliderTop = new Collider(entity->get_widthCollider(), entity->get_heightCollider());
-    entity->colliderTop->setPos(pos().x() + entity->get_widthEntity()/2 - entity->get_widthCollider()/2, pos().y());
-    entity->colliderLeft = new Collider(entity->get_widthCollider(), entity->get_heightCollider());
-    entity->colliderLeft->setPos(pos().x() + entity->get_widthCollider(),  pos().y() + entity->get_heightEntity()/2 - entity->get_heightCollider()/2 );
-    entity->colliderRight = new Collider(entity->get_widthCollider(), entity->get_heightCollider());
-    entity->colliderRight->setPos(pos().x() +  entity->get_widthEntity()  - entity->get_widthCollider(), pos().y() + entity->get_heightEntity()/2 - entity->get_heightCollider()/2);
+    tmpEntity->colliderBottom = new Collider(tmpEntity->get_widthCollider(), tmpEntity->get_heightCollider());
+    tmpEntity->colliderBottom->setPos(pos().x() + tmpEntity->get_widthEntity()/2 - tmpEntity->get_widthCollider()/2, pos().y() +  tmpEntity->get_heightEntity() - tmpEntity->get_heightCollider());
+    tmpEntity->colliderTop = new Collider(tmpEntity->get_widthCollider(), tmpEntity->get_heightCollider());
+    tmpEntity->colliderTop->setPos(pos().x() + tmpEntity->get_widthEntity()/2 - tmpEntity->get_widthCollider()/2, pos().y());
+    tmpEntity->colliderLeft = new Collider(tmpEntity->get_widthCollider(), tmpEntity->get_heightCollider());
+    tmpEntity->colliderLeft->setPos(pos().x() + tmpEntity->get_widthCollider(),  pos().y() + tmpEntity->get_heightEntity()/2 - tmpEntity->get_heightCollider()/2 );
+    tmpEntity->colliderRight = new Collider(tmpEntity->get_widthCollider(), tmpEntity->get_heightCollider());
+    tmpEntity->colliderRight->setPos(pos().x() +  tmpEntity->get_widthEntity()  - tmpEntity->get_widthCollider(), pos().y() + tmpEntity->get_heightEntity()/2 - tmpEntity->get_heightCollider()/2);
 
-    entity->setTransformOriginPoint(0,0);
+    tmpEntity->setTransformOriginPoint(0,0);
 
-    return entity;
+    return tmpEntity;
 }
 
 //fonction to move the player

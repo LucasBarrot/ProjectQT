@@ -7,10 +7,15 @@
 
 class WeaponOnGround : public QGraphicsPixmapItem {
 public:
-    WeaponOnGround(EntityWeapon * argEntity);
+    WeaponOnGround(EntityWeapon * argEntity, double argSize);
+
+    //get the entity of the weapon
+    EntityWeapon * get_entityWeaponOnGround();
 
 private:
     double size;
+
+    EntityWeapon * entityWeapon;
 
 };
 

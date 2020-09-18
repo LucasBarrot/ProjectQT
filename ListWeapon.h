@@ -8,7 +8,9 @@ public:
     ListWeapon();
 
     //get one function of the tab with is index
-    EntityWeapon * get_constructeur(int argIndex);
+    EntityWeapon * get_constructeurOnTab(int argIndex);
+
+    int get_sizeTabConstructeurWeapon();
 
 private:
 

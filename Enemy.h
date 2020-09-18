@@ -12,7 +12,7 @@
 class Enemy : public QObject, public QGraphicsRectItem {
     Q_OBJECT
 public:
-    Enemy();
+    Enemy(int argIndex, bool argBossOrEnemy);
 
     //update Enemy
     void UpdateEnemy();
@@ -29,16 +29,30 @@ public:
     //set object in the scene (enemyEntity and collider)
     void set_objectOfEnemyInScene();
 
+    //get boos or enemy
+    bool get_bossOrEnemy();
+
     //set entity enemy
-    Entity * enemyEntity;
+    EntityCaracter * enemyEntity;
 
     //set a collider to detect they are obstacle to shoot player
     QGraphicsRectItem * lineOfSight;
 
+    //set path projectil
+    void set_pathProjectil(QString argPath);
+
+    //destuction enemy
+    void destructionEnemy();
+
 
 private:
-    //set a entity necromancer
-    Entity * set_necromancer();
+    //index in list enemy for creation of entity
+    int indexListEnemy;
+
+    //verif if the Enemy is a boss or a simple enemy
+    //boss: true
+    //enemy: false
+    bool bossOrEnemy;
 
     //path image projectil shooted by enemy
     QString pathImageProjectil;
@@ -60,6 +74,9 @@ private:
     //prev position of enemy (if it touch a wall or object reset position)
     double prevXPos;
     double prevYPos;
+
+    //entity Enemy set
+    bool initializedEntityEnemy;
 
 };
 

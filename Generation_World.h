@@ -28,6 +28,9 @@ public:
     QVector<Bridge*>  tab_bridge;
     bool verifCollider(QList<QGraphicsItem *> list_Collider);
 
+    //delete all before creating a new level
+    void destructionLevel();
+
 private:
     //number of room in generation
     int numberRoom;

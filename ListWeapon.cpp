@@ -1,19 +1,18 @@
 #include "ListWeapon.h"
 
-#include "EntityWeapon.h"
-
 #include <QDebug>
 
 ListWeapon::ListWeapon(){
 
     tabConstructorWeapon.push_back((EntityWeapon *(ListWeapon::*)())&ListWeapon::set_wizardStaff);
     tabConstructorWeapon.push_back((EntityWeapon *(ListWeapon::*)())&ListWeapon::set_bazooka);
-
-    //qDebug() << "damage :" << ((EntityWeapon *(ListWeapon::*)()) tabConstructorWeapon[0])()->get_damage();
 }
 
-EntityWeapon * ListWeapon::get_constructeur(int argIndex){
-    qDebug() << tabConstructorWeapon.size();
+int ListWeapon::get_sizeTabConstructeurWeapon(){
+    return tabConstructorWeapon.size();
+}
+
+EntityWeapon * ListWeapon::get_constructeurOnTab(int argIndex){
     return (this->*tabConstructorWeapon.at(argIndex))();
 }
 
@@ -32,6 +31,9 @@ EntityWeapon * ListWeapon::set_wizardStaff(){
     //set rate of fire special shoot in second
     tmpEntity->set_rateOfFireSpecial(2);
 
+    //set scale
+    tmpEntity->set_scaleImg(0.5);
+
     //set img weapon
     tmpEntity->set_imgWeapon(":/Source/Source/Image/Weapon/weapon_red_magic_staff.png");
 
@@ -41,12 +43,12 @@ EntityWeapon * ListWeapon::set_wizardStaff(){
     //set img projectil shoot by weapon
     tmpEntity->set_pathImgProjectil(":/Source/Source/Image/projectil/Projectil_1.png");
 
-    //angle aiming (obsolete)
-    tmpEntity->set_angleWeapon(0);
+    //set point to spawn projectil
+    tmpEntity->set_pointSpawnProjecitl(QPointF(tmpEntity->get_imgWeapon().width(), tmpEntity->get_imgWeapon().height()/2));
 
     //set pos weapon
-    tmpEntity->set_posWeapon(QPointF(8,15));
-    tmpEntity->set_posWeaponInvert(QPointF(-3, 15));
+    tmpEntity->set_posWeapon(QPointF(8,10));
+    tmpEntity->set_posWeaponInvert(QPointF(-3, 10));
 
     return tmpEntity;
 }
@@ -66,6 +68,9 @@ EntityWeapon * ListWeapon::set_bazooka(){
     //set rate of fire special shoot in second
     tmpEntity->set_rateOfFireSpecial(5);
 
+    //set scale
+    tmpEntity->set_scaleImg(0.5);
+
     //set img path weapon
     tmpEntity->set_pathImgWeapon(":/Source/Source/Image/Weapon/Bazooka.png");
 
@@ -75,8 +80,8 @@ EntityWeapon * ListWeapon::set_bazooka(){
     //set img projectil shoot by weapon
     tmpEntity->set_pathImgProjectil(":/Source/Source/Image/projectil/Projectil_Bazooka.png");
 
-    //angle aiming (obsolete)
-    tmpEntity->set_angleWeapon(0);
+    //set point to spawn projectil
+    tmpEntity->set_pointSpawnProjecitl(QPointF(tmpEntity->get_imgWeapon().width(), tmpEntity->get_imgWeapon().height()/2));
 
     //set pos weapon
     tmpEntity->set_posWeapon(QPointF(8,15));

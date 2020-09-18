@@ -4,9 +4,9 @@
 
 extern Game * game;
 
-Entity::Entity(){
+EntityCaracter::EntityCaracter(){
     //default value
-    entityIsPlayer = false;
+    TypeCaracter = "";
     displacement = 0;
     actualHealth = 0;
     maxHealth = 0;
@@ -22,17 +22,15 @@ Entity::Entity(){
     indexSprite = 0;
 }
 
-void Entity::set_PlayerOrEnemy(bool argEntityIsPlayer)
-{
-    entityIsPlayer = argEntityIsPlayer;
+void EntityCaracter::set_PlayerOrEnemy(QString argTypePlayer){
+    TypeCaracter = argTypePlayer;
 }
 
-bool Entity::get_entityIsPlayer()
-{
-    return entityIsPlayer;
+QString EntityCaracter::get_entityIsPlayer(){
+    return TypeCaracter;
 }
 
-void Entity::set_displacement(int displacementPerSecond, int fps){
+void EntityCaracter::set_displacement(int displacementPerSecond, int fps){
     if(displacementPerSecond != 0 && fps != 0){
         displacement = displacementPerSecond / fps;
     }
@@ -41,93 +39,93 @@ void Entity::set_displacement(int displacementPerSecond, int fps){
     }
 }
 
-double Entity::get_displacement(){
+double EntityCaracter::get_displacement(){
     return displacement;
 }
 
-void Entity::set_actualHealth(double argHealth){
+void EntityCaracter::set_actualHealth(double argHealth){
     actualHealth = argHealth;
 }
 
-double Entity::get_actualHealth()
+double EntityCaracter::get_actualHealth()
 {
     return actualHealth;
 }
 
-void Entity::set_maxHealth(double argHealth){
+void EntityCaracter::set_maxHealth(double argHealth){
     maxHealth = argHealth;
 }
 
-double Entity::get_maxHealth()
+double EntityCaracter::get_maxHealth()
 {
     return maxHealth;
 }
 
-void Entity::set_indexSprite(int argIndexSprite){
+void EntityCaracter::set_indexSprite(int argIndexSprite){
     indexSprite = argIndexSprite;
 }
 
-void Entity::set_sizeEntity(double argX, double argY){
+void EntityCaracter::set_sizeEntity(double argX, double argY){
     widthEntity = argX;
     heightEntity = argY;
 }
 
-QPointF Entity::get_pointSizeEntity(){
+QPointF EntityCaracter::get_pointSizeEntity(){
     return QPointF(widthEntity, heightEntity);
 }
 
-double Entity::get_widthEntity(){
+double EntityCaracter::get_widthEntity(){
     return widthEntity;
 }
 
-double Entity::get_heightEntity(){
+double EntityCaracter::get_heightEntity(){
     return heightEntity;
 }
 
-void Entity::set_originEntity(double argXCoord, double argYCoord){
+void EntityCaracter::set_originEntity(double argXCoord, double argYCoord){
     xCoordOrigin = argXCoord;
     yCoordOrigin = argYCoord;
 }
 
-QPointF Entity::get_pointCoordOrgin(){
+QPointF EntityCaracter::get_pointCoordOrgin(){
     return QPointF(xCoordOrigin, yCoordOrigin);
 }
 
-double Entity::get_xCoordOrigin(){
+double EntityCaracter::get_xCoordOrigin(){
     return xCoordOrigin;
 }
 
-double Entity::get_yCoordOrigin(){
+double EntityCaracter::get_yCoordOrigin(){
     return yCoordOrigin;
 }
 
-void Entity::set_status(int argStatus){
+void EntityCaracter::set_status(int argStatus){
     status = argStatus;
     changeSprite();
 }
 
-int Entity::get_status(){
+int EntityCaracter::get_status(){
     return status;
 }
 
-void Entity::set_verifRotation(bool argVerif){
+void EntityCaracter::set_verifRotation(bool argVerif){
     verifRotation = argVerif;
 }
 
-bool Entity::get_verifRotation(){
+bool EntityCaracter::get_verifRotation(){
     return verifRotation;
 }
 
-void Entity::set_invulnerability(bool argInvulnerability){
+void EntityCaracter::set_invulnerability(bool argInvulnerability){
     invulnerability = argInvulnerability;
 }
 
-bool Entity::get_invulnerability(){
+bool EntityCaracter::get_invulnerability(){
     return invulnerability;
 }
 
 //sprite
-void Entity::addSprite(std::string pathFile, int argStatus){
+void EntityCaracter::addSprite(std::string pathFile, int argStatus){
     QPixmap * pixmap = new QPixmap();
     pixmap->load(QString::fromStdString(pathFile));
 
@@ -141,21 +139,27 @@ void Entity::addSprite(std::string pathFile, int argStatus){
 
 }
 
-void Entity::set_currentSprite(std::string pathFile){
-    QPixmap * pixmap = new QPixmap();
-    pixmap->load(QString::fromStdString(pathFile));
-    currentSprite = pixmap;
+void EntityCaracter::set_currentSprite(std::string pathFile){
+    if(pathFile == ""){
+        currentSprite = spriteIdle.at(0);
+    }
+    else {
+        QPixmap * pixmap = new QPixmap();
+        pixmap->load(QString::fromStdString(pathFile));
+        currentSprite = pixmap;
+    }
+
 }
 
-QPixmap  Entity::get_currentSprite(){
+QPixmap  EntityCaracter::get_currentSprite(){
     return *currentSprite;
 }
 
-void Entity::changeSprite(){
+void EntityCaracter::changeSprite(){
     indexSprite = 0;
 }
 
-void Entity::chooseSprite(){
+void EntityCaracter::chooseSprite(){
     if(status == 0){
         updateSprite(spriteIdle);
     }
@@ -167,7 +171,7 @@ void Entity::chooseSprite(){
     }
 }
 
-void Entity::updateSprite(QVector<QPixmap*> tabSprite)
+void EntityCaracter::updateSprite(QVector<QPixmap*> tabSprite)
 {
     double xPrev = x();
     double yPrev = y();
@@ -194,24 +198,24 @@ void Entity::updateSprite(QVector<QPixmap*> tabSprite)
 
 
 //collider
-void Entity::set_colliderSize(double argWidth, double argHeight){
+void EntityCaracter::set_colliderSize(double argWidth, double argHeight){
     widthCollider = argWidth;
     heightCollider = argHeight;
 }
 
-QPointF Entity::get_pointColliderSize(){
+QPointF EntityCaracter::get_pointColliderSize(){
     return QPointF(widthCollider, heightCollider);
 }
 
-double Entity::get_widthCollider(){
+double EntityCaracter::get_widthCollider(){
     return widthCollider;
 }
 
-double Entity::get_heightCollider(){
+double EntityCaracter::get_heightCollider(){
     return heightCollider;
 }
 
-bool Entity::colliderVerif(QList<QGraphicsItem *> listCollider, QString nameObjectCollide, QString nameObjectCollide_two, QString nameObjectCollide_three)
+bool EntityCaracter::colliderVerif(QList<QGraphicsItem *> listCollider, QString nameObjectCollide, QString nameObjectCollide_two, QString nameObjectCollide_three)
 {
     bool verif = false;
     for (int i = 0, n = listCollider.size(); i < n; ++i){

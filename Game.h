@@ -12,6 +12,8 @@
 #include "UI.h"
 #include "Inventory.h"
 #include "ListWeapon.h"
+#include "ListEnemy.h"
+#include "ListBoss.h"
 
 
 class Game: public QGraphicsView{
@@ -32,6 +34,8 @@ public:
     UI * ui;
     Inventory * inventory;
     ListWeapon * listWeapon;
+    ListEnemy * listEnemy;
+    ListBoss * listBoss;
 
     QVector<Projectil*> tabProjectil;
 
@@ -42,6 +46,11 @@ public:
     //height and width screen
     double heightScreen;
     double widthScreen;
+
+    //new level
+    void newLevel();
+
+    QTimer *timer;
 
 private:
     double orientationWeapon;
