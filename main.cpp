@@ -1,7 +1,10 @@
 #include <QApplication>
 #include "Game.h"
 
+#include "Menu.h"
+
 Game * game;
+
 
 int main(int argc, char *argv[])
 {

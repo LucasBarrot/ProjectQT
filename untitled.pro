@@ -34,6 +34,7 @@ SOURCES += \
     ListWeapon.cpp \
     Menu.cpp \
     Minimap.cpp \
+    Pause.cpp \
     Player.cpp \
     Projectil.cpp \
     Room.cpp \
@@ -65,6 +66,7 @@ HEADERS += \
     ListWeapon.h \
     Menu.h \
     Minimap.h \
+    Pause.h \
     Player.h \
     Projectil.h \
     Room.h \

@@ -14,6 +14,8 @@
 #include "ListWeapon.h"
 #include "ListEnemy.h"
 #include "ListBoss.h"
+#include "Menu.h"
+#include "Pause.h"
 
 
 class Game: public QGraphicsView{
@@ -47,19 +49,38 @@ public:
     double heightScreen;
     double widthScreen;
 
+    //open option menu
+    void openOption();
+
+    //close option
+    void closeOption();
+
     //new level
     void newLevel();
 
     QTimer *timer;
 
+public slots:
+    //launch a game
+    void launchGame();
+
 private:
+    //orientation of the weapon
     double orientationWeapon;
+
     bool verifRotationCaractere = true;
 
     bool verifLeftClick;
 
+    //verif if a game is launch
+    bool gameIsReady;
+
     //set first weapon
     void addFirstWeaponToInventory();
+
+    Pause * pause;
+    Menu * menu;
+    QGraphicsScene * gameScene;
 };
 
 #endif // GAME_H

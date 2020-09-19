@@ -34,7 +34,6 @@ void Weapon::simpleShoot()
         shoot(0);
         entityWeapon->updateSimpleShoot(false);
         QTimer::singleShot(1000/entityWeapon->get_rateOfFire(), this, &Weapon::continuToSimpleShoot);
-
     }
 }
 

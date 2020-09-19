@@ -24,7 +24,7 @@ Player::Player(double fps){
 void Player::keyPressEvent(QKeyEvent *event){
     //do not repeat key press
     if (!event->isAutoRepeat()){
-        //only Z Q S D can enter
+        //only if Z Q S D is press player can move in the direction of the key
         if((event->key() == Qt::Key_Q || event->key() == Qt::Key_Z || event->key() == Qt::Key_D || event->key() == Qt::Key_S)){
             keysPressed_.insert(event->key());
             //if the player press one touch or more change the animation of idle to mouvement
@@ -35,20 +35,23 @@ void Player::keyPressEvent(QKeyEvent *event){
                 playerEntity->changeSprite();
             }
         }
-        //only space can enter
+        //only if space is press player can do an action
         else if (event->key() == Qt::Key_Space){
             action();
         }
+        //only if 1 or & is press change weapon to slot 1
         else if(event->key() == Qt::Key_Ampersand && weapon->entityWeapon != game->inventory->get_weapon_1() && game->inventory->get_initializedWeapon_1()){
             changeWeapon(1);
         }
+        //only if 2 or é is press change weapon to slot 2
         else if(event->key() == Qt::Key_Eacute && weapon->entityWeapon != game->inventory->get_weapon_2() && game->inventory->get_initializedWeapon_2()){
             changeWeapon(2);
         }
-
+        //only if echap or escape is press you can go to pause
+        else if(event->key() == Qt::Key_Escape){
+            game->openOption();
+        }
     }
-
-
 }
 
 void Player::keyReleaseEvent(QKeyEvent *event){
