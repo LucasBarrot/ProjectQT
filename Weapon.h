@@ -14,10 +14,15 @@
 class Weapon: public QObject, public QGraphicsRectItem{
     Q_OBJECT;
 public:
-    Weapon(EntityWeapon * argEntity);
-    //click left button
+    Weapon();
+
+    //Call after constructeur
+    void callAfter(EntityWeapon * argEntity);
+
+    //click left button call attack_1 weapon
     void simpleShoot();
-    //click right button
+
+    //click right button call attack_2 weapon
     void specialShoot();
 
     EntityWeapon * entityWeapon;
@@ -30,18 +35,32 @@ public:
     //weapon equip change
     void weaponEquipeChange();
 
+    //update verif true to shoot again
+    void updateSpecialShoot();
+
+    //set and get attack
+    //attack 1
+    void set_attack_1(void (Weapon::*ptr)(double));
+    void doAttack_1(double argAngle);
+    //attack 2
+    void set_attack_2(void (Weapon::*ptr)());
+    void doAttack_2();
+
+
+    //list of attack
+    //simple
+    void oneShoot(double bulletAngleToAdd);
+
+    //special
+    void arcShoot();
+
 
 private:
-
     void continuToSimpleShoot();
-
-    void shoot(double bulletAngleToAdd);
 
     void paintEvent(QPaintEvent *event);
 
     QMouseEvent *event;
-
-    void updateSpecialShoot();
 
     //timer for continuous shooting
     QTimer *timerSimpleShoot;
@@ -52,6 +71,12 @@ private:
 
     //weapon pixmap
     WeaponPixmap * weaponPixmap;
+
+    //set attack weapon
+    //attack 1 : continuous shoot
+    void (Weapon::*attack_1)(double);
+    //attack 2 : special shoot
+    void (Weapon::*attack_2)();
 
 };
 

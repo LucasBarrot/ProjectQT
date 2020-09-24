@@ -14,13 +14,21 @@ public:
     void destructionPause();
 
 private slots:
+    //do that when button resume is pressed
    void handleButtonResume();
+
+   //do that when button quit to menu is pressed
+   void handleButtonQuitToMenu();
 
 private:
 
+   //resume button
     QPushButton *buttonResume;
+    QGraphicsProxyWidget *proxyResume;
 
-    QGraphicsProxyWidget *proxy;
+    //quit to menu button
+    QPushButton *buttonQuitToMenu;
+    QGraphicsProxyWidget *proxyQuitToMenu;
 };
 
 #endif // PAUSE_H

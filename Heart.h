@@ -6,6 +6,9 @@
 class Heart : public QGraphicsPixmapItem {
 public :
     Heart(double argSize);
+
+    //change image heart
+    void updateImgHeart(int indexStatusHeart);
 private:
     //heart status
     // 0 : empty
@@ -17,6 +20,9 @@ private:
     QString pathEmptyHeart;
     QString pathHalfFullHeart;
     QString pathFullHeart;
+
+    //size
+    double size;
 };
 
 #endif // HEART_H

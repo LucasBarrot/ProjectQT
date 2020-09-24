@@ -30,8 +30,13 @@ void SpawnZone::spawn(int argSize)
         chest->setPos(rect().width() / 2 - chest->boundingRect().width()/2 , rect().height()/2 - chest->boundingRect().height()/2);
     }
     else if(type.compare("bossRoom") == 0){
-        qDebug() << "Boss Room";
-        Enemy * enemy = new Enemy(rand() % argSize, true);
+        int indexTabBoss = rand() % argSize;
+
+        if(indexTabBoss == argSize){
+            indexTabBoss -= 1;
+        }
+
+        Enemy * enemy = new Enemy(indexTabBoss, true);
 
         //add to tabEnemy
         tabEnemy.append(enemy);
@@ -90,8 +95,14 @@ void SpawnZone::spawnMonsterRoom(int argSize)
 
     //Create every enemy
     for(int indexNMonster = 0; indexNMonster < monsterNumber; indexNMonster++){
+
+        int indexTabEnemy = rand() % argSize;
+
+        if(indexTabEnemy == argSize){
+            indexTabEnemy -= 1;
+        }
         //create a new enemy
-        Enemy * enemy = new Enemy(rand() % argSize, false);
+        Enemy * enemy = new Enemy(indexTabEnemy, false);
 
         //add to tabEnemy
         tabEnemy.append(enemy);

@@ -90,6 +90,7 @@ void Projectil::updatePositionOnScreen(int argIndexProjectil)
             Enemy * enemy = dynamic_cast<Enemy*>(colliding_items.at(indexColliderStop));
             if(enemy->enemyEntity->get_invulnerability() == false){
                 if(enemy->enemyEntity->get_actualHealth() - damage > 0){
+                    //enemy take damage
                     enemy->enemyEntity->set_actualHealth(enemy->enemyEntity->get_actualHealth() - damage);
 
                     //remove bullet
@@ -98,9 +99,14 @@ void Projectil::updatePositionOnScreen(int argIndexProjectil)
                     delete this;
                 }
                 else {
-                    //for a qvector we don't remove it from the scene (if we do it, it going to crash, allocating problem with pointer)
+                    // enemy die
+
                     SpawnZone * spawnZoneEnemy = dynamic_cast<SpawnZone*>(enemy->parentItem());
 
+                    // add point to player
+                    game->addToScore(enemy->get_point());
+
+                    //if boss die spawn a door to new level
                     if(enemy->get_bossOrEnemy()){
                         spawnZoneEnemy->spawnDoorToNextLevel();
                     }
@@ -111,13 +117,38 @@ void Projectil::updatePositionOnScreen(int argIndexProjectil)
                     scene()->removeItem(this);
                     delete this;
 
-
+                    //for a qvector we don't remove it from the scene (if we do it, it going to crash, allocating problem with pointer)
                     delete spawnZoneEnemy->tabEnemy.takeAt(spawnZoneEnemy->tabEnemy.indexOf(enemy));
                 }
             }
         }
         //if it shoot player (from enemy)
         else {
+            if(game->player->playerEntity->get_invulnerability() == false){
+                if(game->player->playerEntity->get_actualHealth() - damage > 0){
+                    //player take damage
+                    game->player->playerEntity->set_actualHealth(game->player->playerEntity->get_actualHealth() - damage);
+
+                    //remove bullet
+                    game->tabProjectil.remove(argIndexProjectil);
+                    scene()->removeItem(this);
+                    delete this;
+
+                    game->ui->updateHealthUI();
+                }
+                else {
+                    //Player die
+
+
+                    //remove bullet
+                    game->tabProjectil.remove(argIndexProjectil);
+                    scene()->removeItem(this);
+                    delete this;
+
+                    //close game and open window recap game
+                    game->closeGameToRecap();
+                }
+            }
 
         }
     }

@@ -138,7 +138,7 @@ void Player::action(){
 //add weapon to player from inventory
 void Player::addWeapon(EntityWeapon * argEntity){
     //add weapon
-     weapon = new Weapon(argEntity);
+     weapon->callAfter(argEntity);
 
      weapon->setParentItem(this);
 }
@@ -152,6 +152,11 @@ void Player::changeWeapon(int indexWeapon){
         weapon->entityWeapon = game->inventory->get_weapon_2();
         weapon->weaponEquipeChange();
     }
+}
+
+SpawnZone *Player::get_roomPlayerIs()
+{
+    return playerIsInRoom;
 }
 
 
@@ -174,7 +179,10 @@ EntityCaracter * Player::set_entityPlayer(int fps)
 
     //set healtyh
     tmpEntity->set_maxHealth(100);
-    tmpEntity->set_actualHealth(tmpEntity->get_actualHealth());
+    tmpEntity->set_actualHealth(tmpEntity->get_maxHealth());
+
+    //set invunerability
+    tmpEntity->set_invulnerability(false);
 
     //set index sprite
     tmpEntity->set_indexSprite(0);
@@ -184,15 +192,21 @@ EntityCaracter * Player::set_entityPlayer(int fps)
 
     //set Sprite entity
     //Sprite idle
-    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Wizzard/wizzard_m_idle_anim_f0.png", 0);
-    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Wizzard/wizzard_m_idle_anim_f1.png", 0);
-    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Wizzard/wizzard_m_idle_anim_f2.png", 0);
-    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Wizzard/wizzard_m_idle_anim_f3.png", 0);
+    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Link/Link_idle_f0.png", 0);
+    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Link/Link_idle_f1.png", 0);
+    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Link/Link_idle_f2.png", 0);
+    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Link/Link_idle_f3.png", 0);
     //Sprite Run
-    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Wizzard/wizzard_m_run_anim_f0.png", 1);
-    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Wizzard/wizzard_m_run_anim_f1.png", 1);
-    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Wizzard/wizzard_m_run_anim_f2.png", 1);
-    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Wizzard/wizzard_m_run_anim_f3.png", 1);
+    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Link/Link_run_f0.png", 1);//f0
+    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Link/Link_run_f1.png", 1);//f1
+    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Link/Link_run_f2.png", 1);//f2
+    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Link/Link_run_f3.png", 1);//f3
+    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Link/Link_run_f4.png", 1);//f4
+    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Link/Link_run_f5.png", 1);//f5
+    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Link/Link_run_f6.png", 1);//f6
+    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Link/Link_run_f7.png", 1);//f7
+    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Link/Link_run_f8.png", 1);//f8
+    tmpEntity->addSprite(":/Source/Source/Image/Caractere/Link/Link_run_f9.png", 1);//f9
 
     //set Current Sprite
     tmpEntity->set_currentSprite("");

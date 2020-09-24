@@ -2,6 +2,8 @@
 
 #include "Game.h"
 
+#include "Weapon.h"
+
 extern Game * game;
 
 EntityWeapon::EntityWeapon(){

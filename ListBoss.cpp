@@ -1,5 +1,9 @@
 #include "ListBoss.h"
 
+#include "Game.h"
+
+extern Game * game;
+
 
 ListBoss::ListBoss(){
     tabConstructorBoss.push_back((EntityCaracter *(ListBoss::*)(Enemy*))&ListBoss::set_bigDemon);
@@ -21,11 +25,17 @@ EntityCaracter *ListBoss::set_bigDemon(Enemy * argEnemy){
     tmpEntity->set_PlayerOrEnemy("Boss");
 
     //set displacement
-    tmpEntity->set_displacement(0, 0);
+    tmpEntity->set_displacement(100, game->fps);
 
     //set health
     tmpEntity->set_maxHealth(150);
     tmpEntity->set_actualHealth(tmpEntity->get_maxHealth());
+
+    //set rate of fire
+    argEnemy->set_rateFire(10);
+
+    //set damage
+    argEnemy->set_damage(15);
 
     //set status (test)
     tmpEntity->set_status(0);
@@ -77,6 +87,16 @@ EntityCaracter *ListBoss::set_bigDemon(Enemy * argEnemy){
 
     //Path image projectil shooted by enemy
     argEnemy->set_pathProjectil(":/Source/Source/Image/projectil/Projectil_1.png");
+
+    //set number of point get by the playe when enemy die
+    argEnemy->set_point(100);
+
+    //define attack
+    argEnemy->set_attack(&Enemy::multipleSimpleShoot);
+
+    //define parameter attack
+    argEnemy->set_angleConeAttack(20);
+    argEnemy->set_nbShootAttack(3);
 
     return tmpEntity;
 }

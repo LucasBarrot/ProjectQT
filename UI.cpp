@@ -109,3 +109,27 @@ void UI::updateWeaponSlot(){
     slotWeapon_1->updateWeaponPrint(size);
     slotWeapon_2->updateWeaponPrint(size);
 }
+
+void UI::updateHealthUI(){
+    int indexHealth;
+    double actualhealth = game->player->playerEntity->get_actualHealth();
+    double maxHealth = game->player->playerEntity->get_maxHealth();
+    for(int indexHeart = 0; indexHeart < tabHeart.size(); ++indexHeart){
+        indexHealth = (indexHeart + 1) * 10;
+
+        if(actualhealth >= indexHealth){
+            tabHeart.at(indexHeart)->updateImgHeart(2);
+        }
+        else if(actualhealth >= indexHealth - 5){
+            tabHeart.at(indexHeart)->updateImgHeart(1);
+        }
+        else {
+            tabHeart.at(indexHeart)->updateImgHeart(0);
+
+        }
+    }
+
+    if(actualhealth > maxHealth){
+
+    }
+}

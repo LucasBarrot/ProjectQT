@@ -3,6 +3,10 @@
 
 #include <QGraphicsPixmapItem>
 
+#include <QGraphicsRectItem>
+
+//#include "Weapon.h"
+
 
 class EntityWeapon : public QGraphicsPixmapItem {
 public:

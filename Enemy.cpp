@@ -30,13 +30,18 @@ Enemy::Enemy(int argIndex, bool argBossOrEnemy){
 
     //set to false initialized entity enemy because yet is not set
     initializedEntityEnemy = false;
+
+    //set parameter attack to 0
+    angleConeAttack = 0;
+    nbShootAttack = 0;
 }
 
 void Enemy::UpdateEnemy(){
     if(initializedEntityEnemy == false){
         //now we gonna initialized entity so we can change initializedEntityEnemy
         initializedEntityEnemy = true;
-        //set entity necromancer
+
+        //set entity necromancer        
         if(bossOrEnemy == false){
             enemyEntity = game->listEnemy->get_constructeurOnTab(indexListEnemy, this);
         }
@@ -47,8 +52,6 @@ void Enemy::UpdateEnemy(){
             setPos(parentItem()->boundingRect().width() / 2 - enemyEntity->get_widthEntity() / 2 ,  parentItem()->boundingRect().height() / 2 - enemyEntity->get_heightEntity() /2);
             set_prevPos(pos());
         }
-
-        enemyEntity->set_displacement(100, game->fps);
 
         enemyEntity->setParentItem(this);
 
@@ -110,8 +113,9 @@ void Enemy::UpdateEnemy(){
 
             if(verifLineOFSightClear){
                 shootSimple(-line.angle());
+                doAttack(-line.angle());
                 shootSimpleReady = false;
-                QTimer::singleShot(5000, this, &Enemy::updateShootSimple);
+                QTimer::singleShot(rateFire, this, &Enemy::updateShootSimple);
 
             }
         }
@@ -148,6 +152,30 @@ bool Enemy::get_bossOrEnemy(){
     return bossOrEnemy;
 }
 
+void Enemy::set_point(int argPoint){
+    point = argPoint;
+}
+
+int Enemy::get_point(){
+    return point;
+}
+
+void Enemy::set_rateFire(double argNbShootPerSecond){
+    rateFire = 1000/argNbShootPerSecond;
+}
+
+double Enemy::get_rateFire(){
+    return rateFire;
+}
+
+void Enemy::set_damage(double argDamage){
+    damage = argDamage;
+}
+
+double Enemy::get_damage(){
+    return damage;
+}
+
 void Enemy::set_pathProjectil(QString argPath){
     pathImageProjectil = argPath;
 }
@@ -156,23 +184,12 @@ void Enemy::destructionEnemy(){
     delete this;
 }
 
-void Enemy::shootSimple(double angle){
-    double xPos = parentItem()->x() + x() + enemyEntity->get_xCoordOrigin();
-    double yPos = parentItem()->y() + y() + enemyEntity->get_yCoordOrigin();
+void Enemy::set_attack(void (Enemy::*ptr)(double argAngle)){
+    attack = ptr;
+}
 
-    double bulletAngleToAdd = 0;
-
-    Projectil * projectil = new Projectil(angle + bulletAngleToAdd, xPos, yPos, 15, pathImageProjectil);
-
-    projectil->set_parentName(typeid (Enemy).name());
-
-    game->tabProjectil.append(projectil);
-
-    projectil->setRotation(angle + bulletAngleToAdd);
-    scene()->addItem(projectil);
-
-    connect(projectil->get_timer(),&QTimer::timeout,projectil,&Projectil::UpdatePosition);
-    projectil->get_timer()->start(1000/game->fps);
+void Enemy::doAttack(double arg_1){
+    (this->*attack)(arg_1);
 }
 
 void Enemy::updateShootSimple()
@@ -231,3 +248,62 @@ void Enemy::moveEnemy(double argAngle){
         setPos(posDx, posDy);
     }
 }
+
+//list attack
+void Enemy::shootSimple(double argAngle){
+    double xPos = parentItem()->x() + x() + enemyEntity->get_xCoordOrigin();
+    double yPos = parentItem()->y() + y() + enemyEntity->get_yCoordOrigin();
+
+    double bulletAngleToAdd = 0;
+
+    Projectil * projectil = new Projectil(argAngle + bulletAngleToAdd, xPos, yPos, damage, pathImageProjectil);
+
+    projectil->set_parentName(typeid (Enemy).name());
+
+    game->tabProjectil.append(projectil);
+
+    projectil->setRotation(argAngle + bulletAngleToAdd);
+    scene()->addItem(projectil);
+
+    connect(projectil->get_timer(),&QTimer::timeout,projectil,&Projectil::UpdatePosition);
+    projectil->get_timer()->start(1000/game->fps);
+}
+
+void Enemy::multipleSimpleShoot(double argAngle){
+    //initial pos of the bullet
+    double xPos = parentItem()->x() + x() + enemyEntity->get_xCoordOrigin();
+    double yPos = parentItem()->y() + y() + enemyEntity->get_yCoordOrigin();
+
+    double bulletAngleToAdd = 0;
+
+    //difference of angle between each shoot
+    double diffenreceAngle = angleConeAttack / (nbShootAttack - 1);
+
+    double angle = argAngle - angleConeAttack / 2;
+
+    for(int indexBullet = 0; indexBullet < nbShootAttack; ++indexBullet){
+        angle += indexBullet * diffenreceAngle;
+        Projectil * projectil = new Projectil(angle + bulletAngleToAdd, xPos, yPos, damage, pathImageProjectil);
+
+        projectil->set_parentName(typeid (Enemy).name());
+
+        game->tabProjectil.append(projectil);
+
+        projectil->setRotation(angle + bulletAngleToAdd);
+        scene()->addItem(projectil);
+
+        connect(projectil->get_timer(),&QTimer::timeout,projectil,&Projectil::UpdatePosition);
+        projectil->get_timer()->start(1000/game->fps);
+    }
+
+}
+
+//define parameter attack
+void Enemy::set_angleConeAttack(double argAngleCone){
+    angleConeAttack = argAngleCone;
+}
+
+void Enemy::set_nbShootAttack(int argNbShoot){
+    nbShootAttack = argNbShoot;
+}
+

@@ -56,6 +56,9 @@ public:
     //weapon has been change update pixmap
     void changeWeapon(int indexWeapon);
 
+    //get room where the palyer is
+    SpawnZone * get_roomPlayerIs();
+
 
 signals:
     /// Emitted when a key is pressed.

@@ -16,6 +16,7 @@
 #include "ListBoss.h"
 #include "Menu.h"
 #include "Pause.h"
+#include "RecapGame.h"
 
 
 class Game: public QGraphicsView{
@@ -49,16 +50,29 @@ public:
     double heightScreen;
     double widthScreen;
 
+    //option
     //open option menu
     void openOption();
-
     //close option
     void closeOption();
+
+    //close game to recap
+    void closeGameToRecap();
+
+    //close recap
+    void closeRecapToMenu();
 
     //new level
     void newLevel();
 
     QTimer *timer;
+
+    //monster kill add to score
+    void addToScore(int argScore);
+    int get_score();
+
+    //get number of level covered by the player
+    int get_nbLevelWorld();
 
 public slots:
     //launch a game
@@ -81,6 +95,16 @@ private:
     Pause * pause;
     Menu * menu;
     QGraphicsScene * gameScene;
+    RecapGame * recap;
+
+    //Number of level traveled
+    int nblevelWorld;
+
+    //score
+    int score;
+
+    //destroy game scene
+    void destroyGameScene();
 };
 
 #endif // GAME_H

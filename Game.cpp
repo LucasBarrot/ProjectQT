@@ -34,8 +34,6 @@ Game::Game(QWidget * parent){
     setSceneRect(scene->sceneRect());
 
     //show();
-
-    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 }
 
 void Game::mouseMoveEvent(QMouseEvent *event)
@@ -71,7 +69,7 @@ void Game::mouseMoveEvent(QMouseEvent *event)
             orientationWeapon = 60;
         }
 
-        player->weapon->setRotation(angle);
+        player->weapon->setRotation(angleWeapon);
         player->weapon->entityWeapon->set_angleWeapon(angleWeapon);
     }
 }
@@ -112,16 +110,23 @@ void Game::mousePressEvent(QMouseEvent *event){
         }
     }
     else {
-        QGraphicsView::mousePressEvent(event);
+        QGraphicsView::mouseReleaseEvent(event);
+        //event->accept();
     }
 }
 
 void Game::mouseReleaseEvent(QMouseEvent *event){
     if(gameIsReady){
-        mousePressed_.erase(event->button());
-        if(event->button() == Qt::LeftButton){
-            verifLeftClick = false;
+        if(gameIsReady){
+            mousePressed_.erase(event->button());
+            if(event->button() == Qt::LeftButton){
+                verifLeftClick = false;
+            }
         }
+    }
+    else {
+        QGraphicsView::mouseDoubleClickEvent(event);
+        //event->accept();
     }
 }
 
@@ -147,6 +152,9 @@ void Game::openOption(){
     gameIsReady = false;
 
     timer->stop();
+
+    this->resetMatrix();
+
     //define new QGraphicsScene pause
     pause = new Pause();
 
@@ -154,6 +162,7 @@ void Game::openOption(){
 
     //define scene
     setScene(scene);
+    //scene->setSceneRect(0, 0, width(), height());
     setSceneRect(scene->sceneRect());
 }
 
@@ -173,10 +182,51 @@ void Game::closeOption(){
     player->setFlag(QGraphicsItem::ItemIsFocusable, true);
     player->setFocus();
 
+    scale(3,3);
 
     timer->start();
 
     gameIsReady = true;
+}
+
+void Game::closeGameToRecap(){
+    //stop action in game
+    gameIsReady = false;
+
+    //stop timer
+    timer->stop();
+
+    resetMatrix();
+
+    //destroy game scene
+    destroyGameScene();
+
+    recap = new RecapGame();
+
+    scene = recap;
+
+    //define scene
+    setScene(scene);
+    setSceneRect(scene->sceneRect());
+}
+
+void Game::closeRecapToMenu(){
+    //stop action in game
+    gameIsReady = false;
+
+    //stop timer
+    timer->stop();
+
+    menu = new Menu();
+
+    scene = menu;
+
+    //set background to background menu
+    setBackgroundBrush(QBrush(QColor(Qt::white)));
+
+    //define scene
+    setScene(scene);
+    setSceneRect(scene->sceneRect());
 }
 
 void Game::launchGame(){
@@ -197,6 +247,11 @@ void Game::launchGame(){
     //set list boss
     listBoss = new ListBoss();
 
+    //set score to 0
+    score = 0;
+
+    //set number of level to 1
+    nblevelWorld = 1;
 
     //setSceneRect(scene->sceneRect());
     setBackgroundBrush(QBrush(QColor(Qt::black)));
@@ -208,12 +263,23 @@ void Game::launchGame(){
     world->generate();
 
     for(int indexRoom = 0; indexRoom < world->tabRoom.size(); ++indexRoom){
-        world->tabRoom.at(indexRoom)->set_spawnZone(QPointF(world->tabRoom.at(indexRoom)->x(), world->tabRoom.at(indexRoom)->y()), listEnemy->get_sizeTabConstructeurEnemy());
-    }
+        if(world->tabRoom.at(indexRoom)->get_type().compare("monsterRoom") == 0){
+            world->tabRoom.at(indexRoom)->set_spawnZone(QPointF(world->tabRoom.at(indexRoom)->x(),
+                                                                world->tabRoom.at(indexRoom)->y()),
+                                                        listEnemy->get_sizeTabConstructeurEnemy());
+        }
+        else if(world->tabRoom.at(indexRoom)->get_type().compare("bossRoom") == 0){
+            world->tabRoom.at(indexRoom)->set_spawnZone(QPointF(world->tabRoom.at(indexRoom)->x(),
+                                                                world->tabRoom.at(indexRoom)->y()),
+                                                        listBoss->get_sizeTabConstructeurEnemy());
+        }
+        else {
+            world->tabRoom.at(indexRoom)->set_spawnZone(QPointF(world->tabRoom.at(indexRoom)->x(),
+                                                                world->tabRoom.at(indexRoom)->y()),
+                                                        0);
+        }
 
-    //add Inventory
-    inventory = new Inventory();
-    inventory->addFirstWeapon(listWeapon->get_constructeurOnTab(0));
+    }
 
     //add player
     player = new Player(fps);
@@ -226,8 +292,17 @@ void Game::launchGame(){
     scene->addItem(player);
     player->set_objectOfPlayerInScene();
 
+    centerOn(player->x() + player->rect().width()/2 + ((width()*0.2)/3)/2, player->y() + player->rect().height()/2);
+
     //set player on top of world
     player->setZValue(1);
+
+    //
+    player->weapon = new Weapon();
+
+    //add Inventory
+    inventory = new Inventory();
+    inventory->addFirstWeapon(listWeapon->get_constructeurOnTab(0, player->weapon));
 
     //add weapon, after creation player and inventory
     player->addWeapon(inventory->get_weapon_1());
@@ -243,8 +318,7 @@ void Game::launchGame(){
     // set the cursor
     //setCursor(QCursor(Qt::CrossCursor));
 
-    //center view on the player
-    this->centerOn(player);
+
     //scale the view
     this->scale(3,3);
 
@@ -257,44 +331,89 @@ void Game::launchGame(){
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-    ui = new UI(widthScreen*0.2/3, heightScreen/3);
-    scene->addItem(ui);
-
     //define scene
     setScene(scene);
     scene->setSceneRect(scene->itemsBoundingRect().x() - width()/4, scene->itemsBoundingRect().y() - height()/4,scene->itemsBoundingRect().size().rwidth() + width()/2, scene->itemsBoundingRect().size().rheight() + height()/2);
     setSceneRect(scene->sceneRect());
+
+    //divide by three to get actual width and height with the scale
+    ui = new UI(width()*0.2/3, height()/3);
+    scene->addItem(ui);
 
     //add update
     timer = new QTimer();
 
     Update * update = new Update(fps, timer);
 
+    //center view on the player
+    this->centerOn(player);
+
     menu->destructionMenu();
 }
 
-void Game::newLevel(){
-    //world->destructionLevel();
+void Game::destroyGameScene(){
+    //destroy world
+    world->destructionLevel();
+}
 
+void Game::newLevel(){
+
+    //timer stop
     timer->stop();
 
-//    world = NULL;
-
+    //destroy world
     world->destructionLevel();
 
+    //add 1 level to the counter of level
+    nblevelWorld += 1;
+
+    //create a new world
     scene->removeItem(world);
     world = new Generation_World();
     scene->addItem(world);
 
+    //generate it
     world->generate();
 
-
+    //set every spawn
     for(int indexRoom = 0; indexRoom < world->tabRoom.size(); ++indexRoom){
-        world->tabRoom.at(indexRoom)->set_spawnZone(QPointF(world->tabRoom.at(indexRoom)->x(), world->tabRoom.at(indexRoom)->y()), listEnemy->get_sizeTabConstructeurEnemy());
+        if(world->tabRoom.at(indexRoom)->get_type().compare("monsterRoom") == 0){
+            world->tabRoom.at(indexRoom)->set_spawnZone(QPointF(world->tabRoom.at(indexRoom)->x(),
+                                                                world->tabRoom.at(indexRoom)->y()),
+                                                        listEnemy->get_sizeTabConstructeurEnemy());
+        }
+        else if(world->tabRoom.at(indexRoom)->get_type().compare("bossRoom") == 0){
+            world->tabRoom.at(indexRoom)->set_spawnZone(QPointF(world->tabRoom.at(indexRoom)->x(),
+                                                                world->tabRoom.at(indexRoom)->y()),
+                                                        listBoss->get_sizeTabConstructeurEnemy());
+        }
+        else {
+            world->tabRoom.at(indexRoom)->set_spawnZone(QPointF(world->tabRoom.at(indexRoom)->x(),
+                                                                world->tabRoom.at(indexRoom)->y()),
+                                                        0);
+        }
     }
 
+    //set position of player to the center of the spawn
     player->setPos(100,100);
 
+    //set the scene fo te new world
+    scene->setSceneRect(scene->itemsBoundingRect().x() - width()/4, scene->itemsBoundingRect().y() - height()/4,scene->itemsBoundingRect().size().rwidth() + width()/2, scene->itemsBoundingRect().size().rheight() + height()/2);
+    setSceneRect(scene->sceneRect());
+
+    //timer start
     timer->start();
+}
+
+void Game::addToScore(int argScore){
+    score += argScore;
+}
+
+int Game::get_score(){
+    return score;
+}
+
+int Game::get_nbLevelWorld(){
+    return nblevelWorld;
 }
 

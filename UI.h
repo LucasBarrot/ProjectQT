@@ -19,6 +19,9 @@ public:
     //update weapon on Ui
     void updateWeaponSlot();
 
+    //update print health after change (damage or heal)
+    void updateHealthUI();
+
     //minimap
     Minimap * minimap;
 

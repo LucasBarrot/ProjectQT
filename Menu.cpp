@@ -5,6 +5,10 @@
 extern Game * game;
 
 Menu::Menu(){
+    //set background
+    setBackgroundBrush(QBrush(QColor(Qt::white)));
+
+    //button launch a game
     buttonLaunchGame = new QPushButton("Lauch new game");
 
     buttonLaunchGame->setGeometry(QRect(QPoint(100, 100), QSize(200, 50)));

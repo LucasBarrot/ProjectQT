@@ -6,7 +6,12 @@
 
 extern Game * game;
 
-Weapon::Weapon(EntityWeapon * argEntity){
+Weapon::Weapon(){
+
+}
+
+void Weapon::callAfter(EntityWeapon *argEntity)
+{
     entityWeapon = argEntity;
     setTransformOriginPoint(entityWeapon->get_imgWeapon().width()/2, entityWeapon->get_imgWeapon().height()/2);
 
@@ -31,10 +36,14 @@ Weapon::Weapon(EntityWeapon * argEntity){
 void Weapon::simpleShoot()
 {
     if(entityWeapon->get_simpleShootReady() && game->mousePressed_.count(Qt::LeftButton)){
-        shoot(0);
+        doAttack_1(0);
         entityWeapon->updateSimpleShoot(false);
         QTimer::singleShot(1000/entityWeapon->get_rateOfFire(), this, &Weapon::continuToSimpleShoot);
     }
+}
+
+void Weapon::specialShoot(){
+    doAttack_2();
 }
 
 void Weapon::continuToSimpleShoot(){
@@ -45,38 +54,6 @@ void Weapon::continuToSimpleShoot(){
 
 void Weapon::updateSpecialShoot(){
     entityWeapon->updateSpecialShoot(true);
-}
-
-//shoot simple and special
-void Weapon::shoot(double bulletAngleToAdd){
-    double xPos = test_ouputWeapon->scenePos().x();
-    double yPos = test_ouputWeapon->scenePos().y();
-
-    Projectil * projectil = new Projectil(entityWeapon->get_angleWeapon() + bulletAngleToAdd, xPos, yPos, 15, entityWeapon->get_pathImgProjectil() /*modify when entity weapon done*/);
-
-    projectil->setParent(this);
-
-    projectil->set_parentName(typeid (Player).name());
-
-    game->tabProjectil.append(projectil);
-
-    projectil->setRotation(entityWeapon->get_angleWeapon() + bulletAngleToAdd);
-    scene()->addItem(projectil);
-
-    connect(projectil->get_timer(), &QTimer::timeout, projectil, &Projectil::UpdatePosition);
-    projectil->get_timer()->start();
-}
-
-void Weapon::specialShoot(){
-    if(entityWeapon->get_specialShootReady()){
-        entityWeapon->updateSpecialShoot(false);
-        double bulletAngleToAdd = -50;
-        for(int indexBullet = 0; indexBullet < 6; indexBullet++){
-            shoot(bulletAngleToAdd);
-            bulletAngleToAdd += 20;
-        }
-        QTimer::singleShot(5000, this, &Weapon::updateSpecialShoot);
-    }
 }
 
 void Weapon::updatePixmap(){
@@ -99,6 +76,55 @@ void Weapon::weaponEquipeChange(){
     updatePixmap();
 }
 
+void Weapon::set_attack_1(void (Weapon::*ptr)(double)){
+    attack_1 = ptr;
+}
+
+void Weapon::doAttack_1(double argAngle){
+    (this->*attack_1)(argAngle);
+}
+
+void Weapon::set_attack_2(void (Weapon::*ptr)()){
+    attack_2 = ptr;
+}
+
+void Weapon::doAttack_2(){
+    (this->*attack_2)();
+
+}
+
+//list of attack for the weapon
+
+void Weapon::oneShoot(double bulletAngleToAdd){
+    double xPos = test_ouputWeapon->scenePos().x();
+    double yPos = test_ouputWeapon->scenePos().y();
+
+    Projectil * projectil = new Projectil(entityWeapon->get_angleWeapon() + bulletAngleToAdd, xPos, yPos, entityWeapon->get_damage(), entityWeapon->get_pathImgProjectil());
+
+    projectil->setParent(this);
+
+    projectil->set_parentName(typeid (Player).name());
+
+    game->tabProjectil.append(projectil);
+
+    projectil->setRotation(entityWeapon->get_angleWeapon() + bulletAngleToAdd);
+    scene()->addItem(projectil);
+
+    connect(projectil->get_timer(), &QTimer::timeout, projectil, &Projectil::UpdatePosition);
+    projectil->get_timer()->start();
+}
+
+void Weapon::arcShoot(){
+    if(entityWeapon->get_specialShootReady()){
+        entityWeapon->updateSpecialShoot(false);
+        double bulletAngleToAdd = -50;
+        for(int indexBullet = 0; indexBullet < 6; indexBullet++){
+            doAttack_1(bulletAngleToAdd);
+            bulletAngleToAdd += 20;
+        }
+        QTimer::singleShot(5000, this, &Weapon::updateSpecialShoot);
+    }
+}
 
 
 

@@ -37,6 +37,7 @@ SOURCES += \
     Pause.cpp \
     Player.cpp \
     Projectil.cpp \
+    RecapGame.cpp \
     Room.cpp \
     SlotWeaponUI.cpp \
     SpawnZone.cpp \
@@ -61,6 +62,7 @@ HEADERS += \
     Ground.h \
     Heart.h \
     Inventory.h \
+    ListAttackWeapon.h \
     ListBoss.h \
     ListEnemy.h \
     ListWeapon.h \
@@ -69,6 +71,7 @@ HEADERS += \
     Pause.h \
     Player.h \
     Projectil.h \
+    RecapGame.h \
     Room.h \
     SlotWeaponUI.h \
     SpawnZone.h \

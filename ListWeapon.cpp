@@ -1,22 +1,27 @@
 #include "ListWeapon.h"
 
+#include "ListAttackWeapon.h"
+
 #include <QDebug>
+
+#include "Weapon.h"
+
 
 ListWeapon::ListWeapon(){
 
-    tabConstructorWeapon.push_back((EntityWeapon *(ListWeapon::*)())&ListWeapon::set_wizardStaff);
-    tabConstructorWeapon.push_back((EntityWeapon *(ListWeapon::*)())&ListWeapon::set_bazooka);
+    tabConstructorWeapon.push_back((EntityWeapon *(ListWeapon::*)(Weapon *))&ListWeapon::set_wizardStaff);
+    tabConstructorWeapon.push_back((EntityWeapon *(ListWeapon::*)(Weapon *))&ListWeapon::set_bazooka);
 }
 
 int ListWeapon::get_sizeTabConstructeurWeapon(){
     return tabConstructorWeapon.size();
 }
 
-EntityWeapon * ListWeapon::get_constructeurOnTab(int argIndex){
-    return (this->*tabConstructorWeapon.at(argIndex))();
+EntityWeapon * ListWeapon::get_constructeurOnTab(int argIndex, Weapon * argWeapon){
+    return (this->*tabConstructorWeapon.at(argIndex))(argWeapon);
 }
 
-EntityWeapon * ListWeapon::set_wizardStaff(){
+EntityWeapon * ListWeapon::set_wizardStaff(Weapon * argWeapon){
     EntityWeapon * tmpEntity = new EntityWeapon();
 
     //set name weapon
@@ -50,10 +55,14 @@ EntityWeapon * ListWeapon::set_wizardStaff(){
     tmpEntity->set_posWeapon(QPointF(8,10));
     tmpEntity->set_posWeaponInvert(QPointF(-3, 10));
 
+    //set attack weapon
+    argWeapon->set_attack_1(&Weapon::oneShoot);
+    argWeapon->set_attack_2(&Weapon::arcShoot);
+
     return tmpEntity;
 }
 
-EntityWeapon * ListWeapon::set_bazooka(){
+EntityWeapon * ListWeapon::set_bazooka(Weapon * argWeapon){
     EntityWeapon * tmpEntity = new EntityWeapon();
 
     //set name weapon

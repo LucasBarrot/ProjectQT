@@ -22,7 +22,11 @@ private:
     //set a entity necromancer
     EntityCaracter * set_necromancer(Enemy * argEnemy);
 
+    //set a entity octorok
+    EntityCaracter * set_octorok(Enemy * argEnemy);
 
+    //set a entity BuzzBlob_CukeMan
+    EntityCaracter * set_buzzBlob_CukeMan(Enemy * argEnemy);
 };
 
 

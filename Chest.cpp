@@ -39,7 +39,7 @@ void Chest::openChest(){
         int indexRandWeapon = rand() % game->listWeapon->get_sizeTabConstructeurWeapon();
 
         //get the entity from the list of constructeur weapon
-        EntityWeapon * entityWeapon = game->listWeapon->get_constructeurOnTab(indexRandWeapon);
+        EntityWeapon * entityWeapon = game->listWeapon->get_constructeurOnTab(indexRandWeapon, game->player->weapon);
 
         //create a new weapon on ground
         WeaponOnGround * weaponOnGround = new WeaponOnGround(entityWeapon, img.width());
