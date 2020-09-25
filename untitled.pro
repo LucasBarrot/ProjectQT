@@ -18,30 +18,73 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     Bridge.cpp \
+    Chest.cpp \
     Collider.cpp \
+    DoorToNextLevel.cpp \
+    Enemy.cpp \
+    EntityCaracter.cpp \
+    EntityWeapon.cpp \
+    Explosion.cpp \
     Game.cpp \
     Generation_World.cpp \
     Ground.cpp \
+    Heart.cpp \
+    Inventory.cpp \
+    ListBoss.cpp \
+    ListEnemy.cpp \
+    ListWeapon.cpp \
+    Menu.cpp \
+    Minimap.cpp \
+    Pause.cpp \
     Player.cpp \
+    Potion.cpp \
     Projectil.cpp \
+    RecapGame.cpp \
     Room.cpp \
+    SlotWeaponUI.cpp \
+    SpawnZone.cpp \
+    UI.cpp \
     Update.cpp \
     Wall.cpp \
     Weapon.cpp \
+    WeaponOnGround.cpp \
+    WeaponPixmap.cpp \
     main.cpp
 
 HEADERS += \
     Bridge.h \
+    Chest.h \
     Collider.h \
+    DoorToNextLevel.h \
+    Enemy.h \
+    EntityCaracter.h \
+    EntityWeapon.h \
+    Explosion.h \
     Game.h \
     Generation_World.h \
     Ground.h \
+    Heart.h \
+    Inventory.h \
+    ListAttackWeapon.h \
+    ListBoss.h \
+    ListEnemy.h \
+    ListWeapon.h \
+    Menu.h \
+    Minimap.h \
+    Pause.h \
     Player.h \
+    Potion.h \
     Projectil.h \
+    RecapGame.h \
     Room.h \
+    SlotWeaponUI.h \
+    SpawnZone.h \
+    UI.h \
     Update.h \
     Wall.h \
-    Weapon.h
+    Weapon.h \
+    WeaponOnGround.h \
+    WeaponPixmap.h
 
 FORMS += \
     mainwindow.ui
