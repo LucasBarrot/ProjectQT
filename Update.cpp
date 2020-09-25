@@ -21,8 +21,6 @@ Update::Update(double argFps, QTimer * argTimer)
     connect(timer,&QTimer::timeout,this,&Update::updateBaseOnFps);
     timer->start( 1000/fps);
 
-
-
 }
 
 void Update::updateBaseOnFps(){
@@ -71,7 +69,4 @@ void Update::updateBaseOnFps(){
     if(indexFps > fps){
         indexFps = 0;
     }
-
-
-
 }

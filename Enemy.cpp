@@ -34,6 +34,9 @@ Enemy::Enemy(int argIndex, bool argBossOrEnemy){
     //set parameter attack to 0
     angleConeAttack = 0;
     nbShootAttack = 0;
+
+    // make disapear border
+    setPen(Qt::NoPen);
 }
 
 void Enemy::UpdateEnemy(){

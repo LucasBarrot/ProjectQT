@@ -53,7 +53,7 @@ void Projectil::set_explosion(double argRadius){
 
 void Projectil::UpdatePosition()
 {
-    int STEP_SIZE = 150/game->fps;
+    int STEP_SIZE = displacement/game->fps;
 
     double dy = STEP_SIZE * qSin(qDegreesToRadians(angle));
     double dx = STEP_SIZE * qCos(qDegreesToRadians(angle));

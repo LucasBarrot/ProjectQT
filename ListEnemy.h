@@ -18,7 +18,6 @@ private:
     //list of all function that construct entity weapon
     QVector<EntityCaracter *(ListEnemy::*)(Enemy*)> tabConstructorEnemy;
 
-
     //set a entity necromancer
     EntityCaracter * set_necromancer(Enemy * argEnemy);
 

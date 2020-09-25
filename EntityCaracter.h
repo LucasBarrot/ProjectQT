@@ -66,7 +66,6 @@ public:
     //update Sprite for each frame
     void updateSprite(QVector<QPixmap*> tabSprite);
 
-
     //Collider
     //collider size
     void set_colliderSize(double argWidth, double argHeight);
