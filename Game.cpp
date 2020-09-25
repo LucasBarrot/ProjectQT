@@ -22,9 +22,9 @@ Game::Game(QWidget * parent){
     scene = menu;
 
     //Minimum size of the screen
-    setMinimumSize(1000,800);
     widthScreen = 1000;
     heightScreen = 800;
+    setMinimumSize(widthScreen, heightScreen);
 
     //disable scroll bar
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -49,11 +49,11 @@ Game::Game(QWidget * parent){
 
 
 
-    //sound menu
-    music = new QMediaPlayer();
-    music->setPlaylist(playlist);
-    music->setVolume(40);
-    music->play();
+//    //sound menu
+//    music = new QMediaPlayer();
+//    music->setPlaylist(playlist);
+//    music->setVolume(40);
+//    music->play();
 
     show();
 }
@@ -255,9 +255,9 @@ void Game::closeRecapToMenu(){
     //set background to background menu
     setBackgroundBrush(QBrush(QColor(0, 100, 0)));
 
-    playlist->removeMedia(0);
-    playlist->addMedia(QUrl("qrc:/Source/Source/Sound/Musique/Menu/Menu.mp3"));
-    music->play();
+//    playlist->removeMedia(0);
+//    playlist->addMedia(QUrl("qrc:/Source/Source/Sound/Musique/Menu/Menu.mp3"));
+//    music->play();
 
     //define scene
     setScene(scene);
@@ -384,10 +384,10 @@ void Game::launchGame(){
     this->centerOn(player);
 
 
-   playlist->removeMedia(0);
-   playlist->addMedia(QUrl("qrc:/Source/Source/Sound/Musique/Game/dungeon-theme-the-legend-of-zelda.mp3"));
+//   playlist->removeMedia(0);
+//   playlist->addMedia(QUrl("qrc:/Source/Source/Sound/Musique/Game/dungeon-theme-the-legend-of-zelda.mp3"));
 
-   music->play();
+//   music->play();
 
     menu->destructionMenu();
 }

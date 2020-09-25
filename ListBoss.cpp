@@ -103,7 +103,7 @@ EntityCaracter *ListBoss::set_bigDemon(Enemy * argEnemy){
     argEnemy->set_attack(&Enemy::multipleSimpleShoot);
 
     //define parameter attack
-    argEnemy->set_angleConeAttack(40);
+    argEnemy->set_angleConeAttack(20);
     argEnemy->set_nbShootAttack(8);
 
     return tmpEntity;
