@@ -1,22 +1,12 @@
 #ifndef WALL_H
 #define WALL_H
 
-#include <QObject>
 #include <QGraphicsRectItem>
+#include <QGraphicsPixmapItem>
 
-class Wall : public QObject, public QGraphicsRectItem{
-    Q_OBJECT
+class Wall: public QGraphicsPixmapItem{
 public:
-    Wall(int x,int y, int width, int length);
-
-private:
-QGraphicsRectItem ColliderLeft;
-QGraphicsRectItem ColliderRight;
-QGraphicsRectItem ColliderTop;
-QGraphicsRectItem ColliderBottom;
-
-signals:
-
+    Wall( int nSide);
 };
 
 #endif // WALL_H

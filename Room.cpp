@@ -1,24 +1,63 @@
 #include "Room.h"
-#include <QPointF>
-#include <QDebug>
+#include "Game.h"
 
-Room::Room(int x, int y, int width, int height) : QObject(), QGraphicsPolygonItem(){
+Room::Room(int x, int y, int width, int height) :  QPolygonF(QRectF(x,y,width,height))
+{
     this->height = height;
     this->width = width;
+
     this->x = x;
     this->y = y;
 
-    QPolygonF poly_out, poly_in, poly_enter;
-    poly_out << QPointF(x, y);
-    poly_out << QPointF(x, y+height);
-    poly_out << QPointF(x+width, y+height);
-    poly_out << QPointF(x+width, y);
+    this->ground_x =x+16;
+    this->ground_y =y+16;
 
+    ground_height = height - 16*2;
+    ground_width  = width - 16*2;
 
-    room = poly_out;
-    setPolygon(room);
+    //set all grounds of rooms
+}
+
+void Room::add_ground(QGraphicsScene *scene){
+    for(float xg=ground_x; xg< ground_x+ground_width; xg+=16){
+        for(float yg=ground_y; yg < ground_y+ground_height; yg+=16){
+            Ground * tile = new Ground();
+            scene->addItem(tile);
+            tile->setPos(xg,yg);
+        }
+    }
 
 }
+void Room::add_walls(QGraphicsScene *scene){
+    //QRectF rect(ground_x,ground_y,ground_height,ground_width);
+    Wall * wall = new Wall(4);
+    scene->addItem(wall);
+    wall->setPos(this->x,y);
+
+    wall = new Wall(3);
+    scene->addItem(wall);
+    wall->setPos(this->x+width-16,y);
+
+    wall = new Wall(5);
+    scene->addItem(wall);
+    wall->setPos(this->x+width-16,this->y+height-16);
+
+    wall = new Wall(6);
+    scene->addItem(wall);
+    wall->setPos(x,this->y+height-16);
+
+/*
+    for(float yw=this->y+16; yw<this->y+height-16; y+=16){
+        Wall * wall = new Wall(2);
+        scene->addItem(wall);
+        wall->setPos(this->x,yw);
+        wall = new Wall(2);
+        scene->addItem(wall);
+        wall->setPos(this->x+width-16,yw);
+   }*/
+}
+
+
 
 QPointF Room::middle_top_point(){
     QPointF point = QPointF(x+width/2, y);
@@ -57,29 +96,33 @@ int Room::which_enter(QPointF point)
         return 3;
 }
 
-void Room::block_enter_side(QPointF point_side){
+void Room::block_enter_of_this_point(QPointF point){
     if(enter_side[0]==0){
-        if (point_side == middle_top_point())
+        if (point == middle_top_point())
             enter_side[0]=1;
     }
     if(enter_side[1]==0){
-        if (point_side == middle_left_point())
+        if (point == middle_left_point())
             enter_side[1]=1;
     }
     if(enter_side[2]==0){
-        if (point_side == middle_bottom_point())
+        if (point == middle_bottom_point())
             enter_side[2]=1;
     }
     if(enter_side[3]==0){
-        if (point_side == middle_right_point())
+        if (point == middle_right_point())
             enter_side[3]=1;
     }
 }
 
-QPolygonF Room::get_room(){
-    return room;
+void Room::block_enter_side(int side){
+    enter_side[side]=1;
 }
+
 
 int * Room::get_enter_sides(){
     return enter_side;
 }
+
+
+

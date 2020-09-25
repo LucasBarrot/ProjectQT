@@ -2,23 +2,77 @@
 #define PLAYER_H
 
 #include <QGraphicsRectItem>
-#include <QObject>
-#include <Network.h>
+#include <QGraphicsPixmapItem>
 #include <QMouseEvent>
-#include <QWidget>
-class Player: public QObject, public QGraphicsRectItem{
-    Q_OBJECT
-public:
-    Player(Network * region);
-    void keyPressEvent(QKeyEvent * event);
-    void mousePressEvent( QMouseEvent *event);
+#include <set>
+#include <QObject>
+#include <QGraphicsObject>
 
-private:
-        double x_prev;
-        double y_prev;
-        Network * playable_region;
-        const QRect player_rect;
-public slots:
+#include "Weapon.h"
+#include "EntityCaracter.h"
+#include "SpawnZone.h"
+
+
+class Player: public QGraphicsRectItem{
+public:
+    Player(double fps);
+    void keyPressEvent(QKeyEvent * event);
+    void keyReleaseEvent(QKeyEvent *event);
+
+    //move caracter
+    void moving();
+
+    //check if player is in a room
+    void verifPlayerInRoom();
+
+    //get origin of player
+    QPointF getOriginMapToScene();
+
+    //set the angle of player
+    void set_angle(double angle);
+
+    //player is in room
+    SpawnZone * get_playerIsInRoom();
+
+    //return angle of player
+    double get_angle();
+
+    //set entity player
+    Entity * playerEntity;
+
+    //set in scene object of player (playerEntity and collider)
+    void set_objectOfPlayerInScene();
+
+    //verif rotation sprite (test)
+    bool verifMirroredSprite = false;
+
+    //Weapon (test)
+    Weapon * weapon;
+signals:
+    /// Emitted when a key is pressed.
+    /// @param key Integer describing the key that was pressed. Compare with constants in Qt::key_.
+    void keyPressed(int key);
+
+    /// Emitted when a key is released.
+    /// @param key Integer describing the key that was released. Compare with constants in Qt::key_.
+    void keyReleased(int key);
+private:    
+    //angle
+    double angle;
+    //QSet<int> keysPressed_;
+    std::set<int> keysPressed_;
+    //verif if a key as been stroke
+    bool verifFirstKeyMOuvement;
+
+    //define entity player;
+    Entity * set_entityPlayer(int player);
+
+    //To know in wich room is the player
+    SpawnZone * playerIsInRoom;
+
+    void moveCloseToWall(int xSign, int ySign, Collider * collider);
+
+
 };
 
 #endif // PLAYER_H

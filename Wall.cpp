@@ -1,21 +1,41 @@
 #include "Wall.h"
-#include <QGraphicsRectItem>
-#include <QRectF>
 
-Wall::Wall(int x, int y, int width, int length) : QObject(), QGraphicsRectItem(){
+#include <QBrush>
+#include <QPainter>
 
-    setRect(x,y,width,length);
-    /***
-    // add right collider
-    ColliderLeft.setRect(0,0, 10,length);
+Wall::Wall(int nSide)
+{
+    QPixmap img;
+    if(nSide==1){
+        img = QPixmap(":/Source/Source/Image/Wall/Wall_top_1.png");
+    }
+    else if(nSide == 2){
+        img = QPixmap(":/Source/Source/Image/Wall/Wall_side_1.png");
+    }
+    else if(nSide == 3){
+        img = QPixmap(":/Source/Source/Image/Wall/Wall_Corner_Top_Right.png");
+    }
+    else if(nSide == 4){
+        img = QPixmap(":/Source/Source/Image/Wall/Wall_Corner_Top_left_1.png");
+    }
+    else if(nSide == 5){
+        img = QPixmap(":/Source/Source/Image/Wall/Wall_Corner_Bottom_Right_1.png");
+    }
+    else if(nSide == 6){
+        img = QPixmap(":/Source/Source/Image/Wall/Wall_Corner_Bottom_Left_1.png");
+    }
 
-    // add right collider
-    ColliderRight.setRect(0+width-10,0, 10,length);
+    setPixmap(img);
+    /*
+    else { //test
+        img = new QImage(":/Source/Source/Image/Wall_1.png");
+    }
 
-    // add top collider
-    ColliderTop.setRect(0,0, width,10);
 
-    // add bottom collider
-    ColliderBottom.setRect(0,0+length-10, width,10);
-    ***/
+    QBrush brush(*img);
+    setBrush(brush);
+    setRect(0,0,lenght, height);
+    setPen(Qt::NoPen);
+    */
+
 }
