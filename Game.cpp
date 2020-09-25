@@ -35,11 +35,6 @@ Game::Game(QWidget * parent){
     scene->setSceneRect(0,0, width(), height());
     setSceneRect(scene->sceneRect());
 
-//    //set background a revoir
-//    QImage img(":/Source/Source/Image/Menu_background/Pics Photos Link From Legend Of Zelda Wallpaper.jpg");
-//    img = img.scaled(width(), height());
-//    setBackgroundBrush(QBrush(QPixmap::fromImage(img)));
-
     setBackgroundBrush(QBrush(QColor(0, 100, 0)));
 
     //set playlist to play loop
@@ -47,13 +42,11 @@ Game::Game(QWidget * parent){
     playlist->addMedia(QUrl("qrc:/Source/Source/Sound/Musique/Menu/Menu.mp3"));
     playlist->setPlaybackMode(QMediaPlaylist::Loop);
 
-
-
-//    //sound menu
-//    music = new QMediaPlayer();
-//    music->setPlaylist(playlist);
-//    music->setVolume(40);
-//    music->play();
+    //sound menu
+    music = new QMediaPlayer();
+    music->setPlaylist(playlist);
+    music->setVolume(40);
+    music->play();
 
     show();
 }
@@ -112,13 +105,6 @@ void Game::resizeEvent(QResizeEvent *event){
     //resize the scene rect, set the view's scene rect to this new scene rect
     scene->setSceneRect(scene->itemsBoundingRect().x() - width()/4, scene->itemsBoundingRect().y() - height()/4,scene->itemsBoundingRect().size().rwidth() + width()/2, scene->itemsBoundingRect().size().rheight() + height()/2);
     setSceneRect(scene->sceneRect());
-
-//    if(scene == menu){
-//        //set background a revoir
-//        QImage img(":/Source/Source/Image/Menu_background/Pics Photos Link From Legend Of Zelda Wallpaper.jpg");
-//        img = img.scaled(width(), height());
-//        setBackgroundBrush(QBrush(QPixmap::fromImage(img)));
-//    }
 }
 
 void Game::wheelEvent(QWheelEvent *event)
@@ -255,9 +241,9 @@ void Game::closeRecapToMenu(){
     //set background to background menu
     setBackgroundBrush(QBrush(QColor(0, 100, 0)));
 
-//    playlist->removeMedia(0);
-//    playlist->addMedia(QUrl("qrc:/Source/Source/Sound/Musique/Menu/Menu.mp3"));
-//    music->play();
+    playlist->removeMedia(0);
+    playlist->addMedia(QUrl("qrc:/Source/Source/Sound/Musique/Menu/Menu.mp3"));
+    music->play();
 
     //define scene
     setScene(scene);
@@ -384,10 +370,10 @@ void Game::launchGame(){
     this->centerOn(player);
 
 
-//   playlist->removeMedia(0);
-//   playlist->addMedia(QUrl("qrc:/Source/Source/Sound/Musique/Game/dungeon-theme-the-legend-of-zelda.mp3"));
+   playlist->removeMedia(0);
+   playlist->addMedia(QUrl("qrc:/Source/Source/Sound/Musique/Game/dungeon-theme-the-legend-of-zelda.mp3"));
 
-//   music->play();
+   music->play();
 
     menu->destructionMenu();
 }
