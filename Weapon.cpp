@@ -99,7 +99,12 @@ void Weapon::oneShoot(double bulletAngleToAdd){
     double xPos = test_ouputWeapon->scenePos().x();
     double yPos = test_ouputWeapon->scenePos().y();
 
-    Projectil * projectil = new Projectil(entityWeapon->get_angleWeapon() + bulletAngleToAdd, xPos, yPos, entityWeapon->get_damage(), entityWeapon->get_pathImgProjectil());
+    Projectil * projectil = new Projectil(entityWeapon->get_angleWeapon() + bulletAngleToAdd, xPos, yPos, entityWeapon->get_damage(), entityWeapon->get_pathImgProjectil(), entityWeapon->get_speedProjectil());
+
+    //set if projectil is explosive
+    if(entityWeapon->get_verifExplosion()){
+        projectil->set_explosion(entityWeapon->get_radiusExplosion());
+    }
 
     projectil->setParent(this);
 

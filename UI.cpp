@@ -63,7 +63,6 @@ void UI::printOnScreen(){
     slotWeapon_2 = new SlotWeaponUI(2, size);
     slotWeapon_2->setParentItem(this);
     slotWeapon_2->setPos(5 + size, tabHeart.at(tabHeart.size() -1)->pos().y() + sizeHeart + 5);
-
 }
 
 void UI::resize(){
@@ -129,7 +128,27 @@ void UI::updateHealthUI(){
         }
     }
 
-    if(actualhealth > maxHealth){
+    if(actualhealth > tabHeart.size() * 10){
+        int numberHeart = game->player->playerEntity->get_maxHealth() / 10 - (tabHeart.size() - 1);
 
+        double sizeHeart = 10;
+
+        //pos of heart
+        double posX = tabHeart.at(tabHeart.size() - 1)->pos().x() + sizeHeart;
+        double posY = tabHeart.at(tabHeart.size() - 1)->pos().y();
+
+
+        for(int indexHeart = 0; indexHeart < numberHeart; ++indexHeart){
+            if(posX + sizeHeart > rect().width() - 5) {
+                posY += sizeHeart;
+                posX = 5;
+            }
+
+            Heart * heart = new Heart(sizeHeart);
+            heart->setPos(posX, posY);
+            heart->setParentItem(this);
+            tabHeart.append(heart);
+            posX += sizeHeart;
+        }
     }
 }

@@ -36,6 +36,7 @@ SOURCES += \
     Minimap.cpp \
     Pause.cpp \
     Player.cpp \
+    Potion.cpp \
     Projectil.cpp \
     RecapGame.cpp \
     Room.cpp \
@@ -70,6 +71,7 @@ HEADERS += \
     Minimap.h \
     Pause.h \
     Player.h \
+    Potion.h \
     Projectil.h \
     RecapGame.h \
     Room.h \

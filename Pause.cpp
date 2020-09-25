@@ -116,5 +116,5 @@ void Pause::handleButtonQuitToMenu(){
 
     game->closeGameToRecap();
 
-    buttonQuitToMenu->releaseMouse();
+    //buttonQuitToMenu->releaseMouse();
 }

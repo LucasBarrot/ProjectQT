@@ -19,9 +19,11 @@ private:
     QVector<EntityCaracter *(ListBoss::*)(Enemy*)> tabConstructorBoss;
 
 
-    //set a entity necromancer
+    //set a entity big demon
     EntityCaracter * set_bigDemon(Enemy * argEnemy);
 
+    //set spider
+    EntityCaracter * set_spider(Enemy * argEnemy);
 
 };
 

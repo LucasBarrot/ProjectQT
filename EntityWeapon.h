@@ -34,6 +34,10 @@ public:
     void set_scaleImg(double scale);
     double get_scaleImg();
 
+    //set and get speed projectil
+    void set_speedProjectil(double argSpeed);
+    double get_speedProjectil();
+
     //Image weapon
     void set_imgWeapon(QString argPath);
     QImage get_imgWeapon();
@@ -65,6 +69,12 @@ public:
     void set_pointSpawnProjecitl(QPointF argPoint);
     QPointF get_pointSpawnProjectil();
 
+    //parameter attack
+    //explosion
+    void set_explosion(double argRadius);
+    bool get_verifExplosion();
+    double get_radiusExplosion();
+
     //verif
     //verif special shoot
     void updateSpecialShoot(bool argReady);
@@ -85,6 +95,8 @@ private:
     double rateOfFirePerSeconde;
     //how many time the spacial shoot need to be recharge
     double rateOfFireSpecial;
+    //speed projectil
+    double speedProjectil;
     //scale image
     double scaleImg;
     //Image Weapon
@@ -101,6 +113,11 @@ private:
     QPointF posWeaponInvert;
     //point to spawn projectil
     QPointF pointSpawnProjectil;
+
+    //parameter attack
+    bool verifExplosion;
+    double radiusExplosion;
+
 
     //verif special shoot
     bool specialShootReady;

@@ -29,11 +29,29 @@ Game::Game(QWidget * parent){
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
+
+
+    //set background a revoir
+    QImage img(":/Source/Source/Image/Menu_background/Pics Photos Link From Legend Of Zelda Wallpaper.jpg");
+    img = img.scaled(width(), height());
+    setBackgroundBrush(QBrush(QPixmap::fromImage(img)));
+
+    //set playlist to play loop
+    playlist = new QMediaPlaylist();
+    playlist->addMedia(QUrl("qrc:/Source/Source/Sound/Musique/Menu/Menu.mp3"));
+    playlist->setPlaybackMode(QMediaPlaylist::Loop);
+
     //define scene
     setScene(scene);
-    setSceneRect(scene->sceneRect());
+    setSceneRect(0,0, img.width(), img.height());
 
-    //show();
+    //sound menu
+    music = new QMediaPlayer();
+    music->setPlaylist(playlist);
+    music->setVolume(40);
+    music->play();
+
+    show();
 }
 
 void Game::mouseMoveEvent(QMouseEvent *event)
@@ -87,7 +105,6 @@ void Game::resizeEvent(QResizeEvent *event){
         ui->resize();
     }
 
-
     //resize the scene rect, set the view's scene rect to this new scene rect
     scene->setSceneRect(scene->itemsBoundingRect().x() - width()/4, scene->itemsBoundingRect().y() - height()/4,scene->itemsBoundingRect().size().rwidth() + width()/2, scene->itemsBoundingRect().size().rheight() + height()/2);
     setSceneRect(scene->sceneRect());
@@ -125,7 +142,7 @@ void Game::mouseReleaseEvent(QMouseEvent *event){
         }
     }
     else {
-        QGraphicsView::mouseDoubleClickEvent(event);
+        QGraphicsView::mousePressEvent(event);
         //event->accept();
     }
 }
@@ -140,6 +157,9 @@ void Game::mouseDoubleClickEvent(QMouseEvent *event){
             player->weapon->simpleShoot();
             verifLeftClick = true;
         }
+    }
+    else {
+        QGraphicsView::mouseDoubleClickEvent(event);
     }
 }
 
@@ -223,6 +243,10 @@ void Game::closeRecapToMenu(){
 
     //set background to background menu
     setBackgroundBrush(QBrush(QColor(Qt::white)));
+
+    playlist->removeMedia(0);
+    playlist->addMedia(QUrl("qrc:/Source/Source/Sound/Musique/Menu/Menu.mp3"));
+    music->play();
 
     //define scene
     setScene(scene);
@@ -348,12 +372,23 @@ void Game::launchGame(){
     //center view on the player
     this->centerOn(player);
 
+
+   playlist->removeMedia(0);
+   playlist->addMedia(QUrl("qrc:/Source/Source/Sound/Musique/Game/dungeon-theme-the-legend-of-zelda.mp3"));
+
+   music->play();
+
     menu->destructionMenu();
 }
 
 void Game::destroyGameScene(){
     //destroy world
     world->destructionLevel();
+
+    //destruction all projectil
+    for(int indexProjectil = tabProjectil.size() - 1; indexProjectil >= 0 ; --indexProjectil){
+        delete tabProjectil.takeAt(indexProjectil);
+    }
 }
 
 void Game::newLevel(){
@@ -363,6 +398,11 @@ void Game::newLevel(){
 
     //destroy world
     world->destructionLevel();
+
+    //destruction all projectil
+    for(int indexProjectil = tabProjectil.size() - 1; indexProjectil >= 0 ; --indexProjectil){
+        delete tabProjectil.takeAt(indexProjectil);
+    }
 
     //add 1 level to the counter of level
     nblevelWorld += 1;

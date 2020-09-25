@@ -36,6 +36,9 @@ EntityWeapon * ListWeapon::set_wizardStaff(Weapon * argWeapon){
     //set rate of fire special shoot in second
     tmpEntity->set_rateOfFireSpecial(2);
 
+    //set speed projectil
+    tmpEntity->set_speedProjectil(200);
+
     //set scale
     tmpEntity->set_scaleImg(0.5);
 
@@ -59,6 +62,9 @@ EntityWeapon * ListWeapon::set_wizardStaff(Weapon * argWeapon){
     argWeapon->set_attack_1(&Weapon::oneShoot);
     argWeapon->set_attack_2(&Weapon::arcShoot);
 
+    //set explosion
+    tmpEntity->set_explosion(5);
+
     return tmpEntity;
 }
 
@@ -76,6 +82,9 @@ EntityWeapon * ListWeapon::set_bazooka(Weapon * argWeapon){
 
     //set rate of fire special shoot in second
     tmpEntity->set_rateOfFireSpecial(5);
+
+    //set speed projectil
+    tmpEntity->set_speedProjectil(150);
 
     //set scale
     tmpEntity->set_scaleImg(0.5);
@@ -95,6 +104,9 @@ EntityWeapon * ListWeapon::set_bazooka(Weapon * argWeapon){
     //set pos weapon
     tmpEntity->set_posWeapon(QPointF(8,15));
     tmpEntity->set_posWeaponInvert(QPointF(-3, 15));
+
+    //set explosion
+    tmpEntity->set_explosion(30);
 
     return tmpEntity;
 }

@@ -4,6 +4,8 @@
 #include <QGraphicsView>
 #include <QWidget>
 #include <QGraphicsScene>
+#include <QMediaPlayer>
+#include <QMediaPlaylist>
 
 #include "Generation_World.h"
 #include "Player.h"
@@ -39,6 +41,8 @@ public:
     ListWeapon * listWeapon;
     ListEnemy * listEnemy;
     ListBoss * listBoss;
+    QMediaPlaylist *playlist;
+    QMediaPlayer * music;
 
     QVector<Projectil*> tabProjectil;
 

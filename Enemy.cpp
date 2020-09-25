@@ -176,6 +176,10 @@ double Enemy::get_damage(){
     return damage;
 }
 
+void Enemy::set_speedProjectil(double argSpeed){
+    speedProjectil = argSpeed;
+}
+
 void Enemy::set_pathProjectil(QString argPath){
     pathImageProjectil = argPath;
 }
@@ -256,7 +260,7 @@ void Enemy::shootSimple(double argAngle){
 
     double bulletAngleToAdd = 0;
 
-    Projectil * projectil = new Projectil(argAngle + bulletAngleToAdd, xPos, yPos, damage, pathImageProjectil);
+    Projectil * projectil = new Projectil(argAngle + bulletAngleToAdd, xPos, yPos, damage, pathImageProjectil, speedProjectil);
 
     projectil->set_parentName(typeid (Enemy).name());
 
@@ -283,7 +287,7 @@ void Enemy::multipleSimpleShoot(double argAngle){
 
     for(int indexBullet = 0; indexBullet < nbShootAttack; ++indexBullet){
         angle += indexBullet * diffenreceAngle;
-        Projectil * projectil = new Projectil(angle + bulletAngleToAdd, xPos, yPos, damage, pathImageProjectil);
+        Projectil * projectil = new Projectil(angle + bulletAngleToAdd, xPos, yPos, damage, pathImageProjectil, speedProjectil);
 
         projectil->set_parentName(typeid (Enemy).name());
 

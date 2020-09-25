@@ -12,7 +12,16 @@
 class Projectil: public QObject, public QGraphicsPixmapItem{
     Q_OBJECT
 public:
-    Projectil(double angle, double argXPos, double argYPos, double argDamage, QString argPhathImageProjectil);
+    Projectil(double angle,
+              double argXPos,
+              double argYPos,
+              double argDamage,
+              QString argPhathImageProjectil,
+              double argDisplacement);
+
+    //set explosion
+    void set_explosion(double argRadius);
+
     //update the position every fps
     void UpdatePosition();
     //update the position on the screen
@@ -44,6 +53,16 @@ private:
 
     //timer
     QTimer *timer;
+
+    //displacement projectil
+    double displacement;
+
+    //if explosion append when projectil touch something
+    bool verifExplosion;
+
+    //parameter explosion
+    //radius
+    double radius;
 };
 
 #endif // PROJECTIL_H

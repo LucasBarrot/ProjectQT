@@ -4,6 +4,7 @@
 #include "Game.h"
 #include "Enemy.h"
 #include "WeaponOnGround.h"
+#include "Potion.h"
 
 #include <QKeyEvent>
 #include <QDebug>
@@ -82,13 +83,14 @@ void Player::set_angle(double argAngle)
 
 void Player::healthPlayerChange(double argHealth){
     //change health in entity
-    playerEntity->set_actualHealth(argHealth);
+    playerEntity->set_actualHealth(playerEntity->get_actualHealth() + argHealth);
 
     if(playerEntity->get_actualHealth() > playerEntity->get_maxHealth()){
         playerEntity->set_maxHealth(playerEntity->get_actualHealth());
     }
 
     //change health in UI
+    game->ui->updateHealthUI();
 
 }
 
@@ -128,6 +130,17 @@ void Player::action(){
              delete weaponOnGroundTouchByPlayer;
              break;
          }
+         //if potion detect
+         if(typeid (*(colliding_items[indexCollider])).name() == typeid(Potion).name()){
+             Potion * potion = dynamic_cast<Potion*>(colliding_items.at(indexCollider));
+
+             healthPlayerChange(potion->get_healtEarn());
+
+             delete  potion;
+             break;
+         }
+
+         //if door to next level detect
          if(typeid (*(colliding_items[indexCollider])).name() == typeid(DoorToNextLevel).name()){
              game->newLevel();
              break;

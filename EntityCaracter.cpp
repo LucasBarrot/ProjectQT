@@ -47,8 +47,7 @@ void EntityCaracter::set_actualHealth(double argHealth){
     actualHealth = argHealth;
 }
 
-double EntityCaracter::get_actualHealth()
-{
+double EntityCaracter::get_actualHealth(){
     return actualHealth;
 }
 

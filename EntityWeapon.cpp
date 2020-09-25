@@ -15,6 +15,10 @@ EntityWeapon::EntityWeapon(){
     angleAiming = 0;
     specialShootReady = true;
     simpleShootReady = true;
+
+    //paramater
+    verifExplosion = false;
+    radiusExplosion = 0;
 }
 
 void EntityWeapon::set_nameWeapon(QString argName){
@@ -51,6 +55,14 @@ void EntityWeapon::set_scaleImg(double argScale){
 
 double EntityWeapon::get_scaleImg(){
     return scaleImg;
+}
+
+void EntityWeapon::set_speedProjectil(double argSpeed){
+    speedProjectil = argSpeed;
+}
+
+double EntityWeapon::get_speedProjectil(){
+    return speedProjectil;
 }
 
 void EntityWeapon::set_imgWeapon(QString argPath){
@@ -114,6 +126,20 @@ void EntityWeapon::set_pointSpawnProjecitl(QPointF argPoint){
 
 QPointF EntityWeapon::get_pointSpawnProjectil(){
     return pointSpawnProjectil;
+}
+
+void EntityWeapon::set_explosion(double argRadius){
+    verifExplosion = true;
+    radiusExplosion = argRadius;
+}
+
+bool EntityWeapon::get_verifExplosion(){
+    return verifExplosion;
+}
+
+double EntityWeapon::get_radiusExplosion()
+{
+    return radiusExplosion;
 }
 
 void EntityWeapon::updateSimpleShoot(bool argReady){

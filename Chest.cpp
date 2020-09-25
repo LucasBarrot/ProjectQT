@@ -5,6 +5,7 @@
 #include "Game.h"
 #include "ListWeapon.h"
 #include "WeaponOnGround.h"
+#include "Potion.h"
 
 extern Game * game;
 
@@ -35,19 +36,33 @@ void Chest::openChest(){
         QImage img(pathChestOpen);
         setPixmap(QPixmap::fromImage(img));
 
-        //spawn a random weapon of listWeapon
-        int indexRandWeapon = rand() % game->listWeapon->get_sizeTabConstructeurWeapon();
+        //get a potion or weapon
+        int random = rand() % 3;
 
-        //get the entity from the list of constructeur weapon
-        EntityWeapon * entityWeapon = game->listWeapon->get_constructeurOnTab(indexRandWeapon, game->player->weapon);
+        if(random == 0){
+            //spawn a potion
+            Potion * potion = new Potion();
 
-        //create a new weapon on ground
-        WeaponOnGround * weaponOnGround = new WeaponOnGround(entityWeapon, img.width());
+            potion->setParentItem(this);
 
-        weaponOnGround->setParentItem(this);
+            //set pos a little bit aboce
+            potion->setPos(0, -15);
+        }
+        else {
+            //spawn a random weapon of listWeapon
+            int indexRandWeapon = rand() % game->listWeapon->get_sizeTabConstructeurWeapon();
 
-        //set pos a little bit aboce
-        weaponOnGround->setPos(0, -5);
+            //get the entity from the list of constructeur weapon
+            EntityWeapon * entityWeapon = game->listWeapon->get_constructeurOnTab(indexRandWeapon, game->player->weapon);
+
+            //create a new weapon on ground
+            WeaponOnGround * weaponOnGround = new WeaponOnGround(entityWeapon, img.width());
+
+            weaponOnGround->setParentItem(this);
+
+            //set pos a little bit aboce
+            weaponOnGround->setPos(0, -5);
+        }
     }
 
 }

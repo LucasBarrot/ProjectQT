@@ -44,6 +44,9 @@ public:
     void set_damage(double argDamage);
     double get_damage();
 
+    //set speedProjectil
+    void set_speedProjectil(double argSpeed);
+
     //set entity enemy
     EntityCaracter * enemyEntity;
 
@@ -84,6 +87,9 @@ private:
 
     //number of point get from enemy
     int point;
+
+    //speed projectil
+    double speedProjectil;
 
     //verif if the Enemy is a boss or a simple enemy
     //boss: true
