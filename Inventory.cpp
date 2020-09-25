@@ -50,7 +50,7 @@ void Inventory::changeWeapon(EntityWeapon * argEntity){
 
             QPointF posWeaponOnGround = game->player->get_roomPlayerIs()->mapFromItem(game->player->parentItem(), game->player->pos());
 
-            //set pos a little bit aboce
+            //set pos a little bit above
             weaponOnGround->setPos(posWeaponOnGround.x(), posWeaponOnGround.y() + game->player->playerEntity->get_heightEntity() / 2);
 
             Weapon_1 = argEntity;

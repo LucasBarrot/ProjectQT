@@ -20,6 +20,9 @@ Player::Player(double fps){
 
     //set player
     playerEntity = set_entityPlayer(fps);
+
+    // make disapear border
+    setPen(Qt::NoPen);
 }
 
 void Player::keyPressEvent(QKeyEvent *event){

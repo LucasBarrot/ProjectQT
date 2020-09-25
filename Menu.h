@@ -10,7 +10,7 @@
 class Menu : public QGraphicsScene {
     Q_OBJECT
 public:
-    Menu();
+    Menu(double argWidth, double argHeight);
 
     void destructionMenu();
 private slots:

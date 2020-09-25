@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/Source">
-        <file>Source/Image/Wall_1.png</file>
         <file>Source/Image/projectil/Projectil_1.png</file>
         <file>Source/Image/Weapon/weapon_red_magic_staff.png</file>
         <file>Source/Image/Wall/Wall_Corner_Bottom_Left_1.png</file>
@@ -86,5 +85,7 @@
         <file>Source/Sound/Musique/Menu/Menu.mp3</file>
         <file>Source/Sound/Musique/Game/dungeon-theme-the-legend-of-zelda.mp3</file>
         <file>Source/Image/Menu_background/Pics Photos Link From Legend Of Zelda Wallpaper.jpg</file>
+        <file>Source/Image/Weapon/Sword_basique.png</file>
+        <file>Source/Image/projectil/Sword_projectil.png</file>
     </qresource>
 </RCC>

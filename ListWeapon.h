@@ -18,11 +18,16 @@ private:
     //list of all function that construct entity weapon
     QVector<EntityWeapon *(ListWeapon::*)(Weapon *)> tabConstructorWeapon;
 
+    //set Sword
+    EntityWeapon *set_swordBasic(Weapon * argWeapon);
+
     //set wizard staff
     EntityWeapon *set_wizardStaff(Weapon * argWeapon);
 
     //set bazooka
     EntityWeapon *set_bazooka(Weapon * argWeapon);
+
+
 
 
 };

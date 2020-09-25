@@ -24,6 +24,7 @@ SOURCES += \
     Enemy.cpp \
     EntityCaracter.cpp \
     EntityWeapon.cpp \
+    Explosion.cpp \
     Game.cpp \
     Generation_World.cpp \
     Ground.cpp \
@@ -58,6 +59,7 @@ HEADERS += \
     Enemy.h \
     EntityCaracter.h \
     EntityWeapon.h \
+    Explosion.h \
     Game.h \
     Generation_World.h \
     Ground.h \

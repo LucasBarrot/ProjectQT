@@ -7,7 +7,8 @@
 extern Game * game;
 
 Weapon::Weapon(){
-
+    // make disapear border
+    setPen(Qt::NoPen);
 }
 
 void Weapon::callAfter(EntityWeapon *argEntity)
@@ -47,7 +48,6 @@ void Weapon::specialShoot(){
 }
 
 void Weapon::continuToSimpleShoot(){
-
         entityWeapon->updateSimpleShoot(true);
         simpleShoot();
 }

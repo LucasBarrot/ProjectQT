@@ -1,6 +1,8 @@
 #include "Projectil.h"
 #include "Game.h"
 
+#include "Explosion.h"
+
 #include <qmath.h> // qSin, qCos, qTan
 #include <QGraphicsScene>
 #include <QTime>
@@ -97,6 +99,7 @@ void Projectil::updatePositionOnScreen(int argIndexProjectil)
          }
     }
 
+    //do not explode
     if(verifExplosion == false){
         //remove item if projectil touch a wall
         if(verifWall){
@@ -174,6 +177,7 @@ void Projectil::updatePositionOnScreen(int argIndexProjectil)
         }
 
     }
+    //do explod
     else if(verifExplosion && (verifCaraterHit|| verifWall))        {
         QGraphicsEllipseItem * circleExplosion = new QGraphicsEllipseItem(radius / 2, radius / 2, radius, radius);
 
@@ -184,17 +188,18 @@ void Projectil::updatePositionOnScreen(int argIndexProjectil)
 
         QVector<QGraphicsItem*> tabColliderCaracter;
 
+        Explosion * explosion = new Explosion(radius);
+
+        explosion->setPos(xPosProjectil +(this->boundingRect().width() / 2 - radius / 2), yPosProjectil + (this->boundingRect().height() /2 - radius / 2));
+
+        scene()->addItem(explosion);
+
         //remove bullet
         game->tabProjectil.remove(argIndexProjectil);
         scene()->removeItem(this);
         this->deleteLater();
-        colliding_items_explosion.removeFirst();
 
-//        for (int indexCollider = colliding_items_explosion.size() - 1; 0 <= indexCollider; --indexCollider){
-//            if(colliding_items_explosion[indexCollider] == 0){
-//                colliding_items_explosion.removeAt(indexCollider);
-//            }
-//        }
+
 
         for (int indexCollider = colliding_items_explosion.size() - 1; 0 <= indexCollider; --indexCollider){
             if(typeid (*(colliding_items_explosion[indexCollider])).name() != typeid (QGraphicsItem).name())
@@ -225,8 +230,6 @@ void Projectil::updatePositionOnScreen(int argIndexProjectil)
                             if(indexEnemy >= 0){
                                 spawnZoneEnemy->tabEnemy.takeAt(indexEnemy)->deleteLater();
                             }
-//                             spawnZoneEnemy->tabEnemy.remove(indexEnemy);
-//                             colliding_items_explosion.removeAt(indexCollider);
                          }
                      }
                  }

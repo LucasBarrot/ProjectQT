@@ -13,7 +13,8 @@ SpawnZone::SpawnZone(double argX, double argY, double argWidth, double argHeight
     //set a rect to define the spawn zone
     setRect(argX, argY, argHeight, argWidth);
 
-    //setPen(Qt::NoPen);
+    // make disapear border
+    setPen(Qt::NoPen);
 
     //set the type of the room
     type = typeOfRoom;

@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <chrono>
 #include <thread>
+#include <QPalette>
 
 Game::Game(QWidget * parent){
     //set fps
@@ -15,7 +16,7 @@ Game::Game(QWidget * parent){
     //set game is launch to false, because it is the menu
     gameIsReady = false;
 
-    menu = new Menu();
+    menu = new Menu(width(), height());
 
     //Create scene
     scene = menu;
@@ -29,21 +30,24 @@ Game::Game(QWidget * parent){
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
+    //define scene
+    setScene(scene);
+    scene->setSceneRect(0,0, width(), height());
+    setSceneRect(scene->sceneRect());
 
+//    //set background a revoir
+//    QImage img(":/Source/Source/Image/Menu_background/Pics Photos Link From Legend Of Zelda Wallpaper.jpg");
+//    img = img.scaled(width(), height());
+//    setBackgroundBrush(QBrush(QPixmap::fromImage(img)));
 
-    //set background a revoir
-    QImage img(":/Source/Source/Image/Menu_background/Pics Photos Link From Legend Of Zelda Wallpaper.jpg");
-    img = img.scaled(width(), height());
-    setBackgroundBrush(QBrush(QPixmap::fromImage(img)));
+    setBackgroundBrush(QBrush(QColor(0, 100, 0)));
 
     //set playlist to play loop
     playlist = new QMediaPlaylist();
     playlist->addMedia(QUrl("qrc:/Source/Source/Sound/Musique/Menu/Menu.mp3"));
     playlist->setPlaybackMode(QMediaPlaylist::Loop);
 
-    //define scene
-    setScene(scene);
-    setSceneRect(0,0, img.width(), img.height());
+
 
     //sound menu
     music = new QMediaPlayer();
@@ -108,6 +112,13 @@ void Game::resizeEvent(QResizeEvent *event){
     //resize the scene rect, set the view's scene rect to this new scene rect
     scene->setSceneRect(scene->itemsBoundingRect().x() - width()/4, scene->itemsBoundingRect().y() - height()/4,scene->itemsBoundingRect().size().rwidth() + width()/2, scene->itemsBoundingRect().size().rheight() + height()/2);
     setSceneRect(scene->sceneRect());
+
+//    if(scene == menu){
+//        //set background a revoir
+//        QImage img(":/Source/Source/Image/Menu_background/Pics Photos Link From Legend Of Zelda Wallpaper.jpg");
+//        img = img.scaled(width(), height());
+//        setBackgroundBrush(QBrush(QPixmap::fromImage(img)));
+//    }
 }
 
 void Game::wheelEvent(QWheelEvent *event)
@@ -237,12 +248,12 @@ void Game::closeRecapToMenu(){
     //stop timer
     timer->stop();
 
-    menu = new Menu();
+    menu = new Menu(width(), height());
 
     scene = menu;
 
     //set background to background menu
-    setBackgroundBrush(QBrush(QColor(Qt::white)));
+    setBackgroundBrush(QBrush(QColor(0, 100, 0)));
 
     playlist->removeMedia(0);
     playlist->addMedia(QUrl("qrc:/Source/Source/Sound/Musique/Menu/Menu.mp3"));
